@@ -1,0 +1,91 @@
+﻿@model IEnumerable<WebBanNuoc.Models.Entities.Category>
+
+
+
+<li class="nav-item dropdown menu-animate">
+    <a class="nav-link dropdown-toggle"
+       href="#"
+       id="menuDropdown"
+       role="button"
+       data-bs-toggle="dropdown"
+       aria-expanded="false">
+        <i class="fa fa-list"></i> Thực đơn
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-animate">
+        @foreach (var c in Model)
+        {
+            <li>
+                <a class="dropdown-item"
+                   href="@Url.Action("Index", "Products", new { category = c.Slug })">
+                    @c.Name
+                </a>
+            </li>
+        }
+    </ul>
+</li>
+
+<style>
+
+    .menu-animate .dropdown-menu {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: all 0.3s ease;
+        display: block;
+        pointer-events: none;
+    }
+
+    .menu-animate:hover .dropdown-menu {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .dropdown-menu-animate .dropdown-item {
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+    }
+
+    .menu-animate:hover .dropdown-item {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .dropdown-menu-animate li:nth-child(1) .dropdown-item {
+        transition-delay: 0.05s;
+    }
+
+    .dropdown-menu-animate li:nth-child(2) .dropdown-item {
+        transition-delay: 0.1s;
+    }
+
+    .dropdown-menu-animate li:nth-child(3) .dropdown-item {
+        transition-delay: 0.15s;
+    }
+
+    .dropdown-menu-animate li:nth-child(4) .dropdown-item {
+        transition-delay: 0.2s;
+    }
+
+    .dropdown-menu-animate li:nth-child(5) .dropdown-item {
+        transition-delay: 0.25s;
+    }
+
+    /* Hover item */
+    .dropdown-item:hover {
+        padding-left: 1.8rem;
+        background: #000000;
+        color: var(--primary-color); 
+    }
+</style>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.innerWidth < 992) {
+            document.querySelectorAll('.menu-animate').forEach(menu => {
+                menu.classList.remove('menu-animate');
+            });
+        }
+    });
+</script>

@@ -1,0 +1,403 @@
+﻿@{
+    ViewBag.Title = "Đăng ký tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="register-page">
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-10">
+                <div class="register-card">
+                    <div class="row g-0">
+                        <div class="col-lg-5 d-none d-lg-block">
+                            <div class="register-image">
+                                <div class="overlay"></div>
+                                <div class="brand-content">
+                                    <i class="fa fa-leaf brand-icon"></i>
+                                    <h2>Tham gia Sip & Savor</h2>
+                                    <p>Trở thành thành viên ngay hôm nay để tích điểm, đổi quà và thưởng thức hương vị trọn vẹn!</p>
+
+                                    <div class="benefits-list text-start mt-4 d-inline-block">
+                                        <div class="benefit-item mb-2"><i class="fa fa-check-circle me-2"></i>Miễn phí giao hàng đơn đầu tiên</div>
+                                        <div class="benefit-item mb-2"><i class="fa fa-check-circle me-2"></i>Ưu đãi sinh nhật đặc biệt</div>
+                                        <div class="benefit-item"><i class="fa fa-check-circle me-2"></i>Tích điểm trên mọi hóa đơn</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-7">
+                            <div class="register-form-container">
+                                <div class="text-center mb-4">
+                                    <h3 class="fw-bold">Tạo tài khoản mới</h3>
+                                    <p class="text-muted">Điền thông tin bên dưới để bắt đầu</p>
+                                </div>
+
+                                <form id="registerForm" method="post" action="@Url.Action("Register", "Account")">
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="fullName" name="FullName" placeholder="Nguyễn Văn A" required>
+                                        <label for="fullName"><i class="fa fa-user me-2"></i>Họ và tên</label>
+                                    </div>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="email" class="form-control" id="email" name="Email" placeholder="name@example.com" required>
+                                                <label for="email"><i class="fa fa-envelope me-2"></i>Email</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="tel" class="form-control" id="phone" name="PhoneNumber" placeholder="0901234567">
+                                                <label for="phone"><i class="fa fa-phone me-2"></i>Số điện thoại</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-floating mb-3 position-relative">
+                                        <input type="password" class="form-control" id="password" name="Password" placeholder="Mật khẩu" required minlength="6">
+                                        <label for="password"><i class="fa fa-lock me-2"></i>Mật khẩu</label>
+                                        <button type="button" class="btn-toggle-password" onclick="togglePassword('password', 'toggleIcon1')">
+                                            <i class="fa fa-eye" id="toggleIcon1"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="form-floating mb-3 position-relative">
+                                        <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" placeholder="Xác nhận mật khẩu" required>
+                                        <label for="confirmPassword"><i class="fa fa-check-circle me-2"></i>Xác nhận mật khẩu</label>
+                                        <button type="button" class="btn-toggle-password" onclick="togglePassword('confirmPassword', 'toggleIcon2')">
+                                            <i class="fa fa-eye" id="toggleIcon2"></i>
+                                        </button>
+                                        <div id="passwordError" class="invalid-feedback">
+                                            Mật khẩu xác nhận không khớp!
+                                        </div>
+                                    </div>
+
+                                    <div class="form-check mb-4">
+                                        <input class="form-check-input" type="checkbox" id="terms" required>
+                                        <label class="form-check-label text-muted small" for="terms">
+                                            Tôi đồng ý với <a href="#" class="link-term">Điều khoản dịch vụ</a> và <a href="#" class="link-term">Chính sách bảo mật</a> của Sip & Savor.
+                                        </label>
+                                    </div>
+
+                                    @if (ViewBag.Error != null)
+                                    {
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <i class="fa fa-exclamation-circle me-2"></i>@ViewBag.Error
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    }
+
+                                    <button type="submit" class="btn btn-register w-100 mb-3">
+                                        <i class="fa fa-user-plus me-2"></i>Đăng ký tài khoản
+                                    </button>
+
+                                    <div class="divider">
+                                        <span>hoặc đăng ký với</span>
+                                    </div>
+
+                                    <div class="social-login">
+                                        <button type="button" class="btn btn-social btn-google">
+                                            <i class="fab fa-google"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-social btn-facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="text-center mt-4">
+                                        <p class="mb-0">
+                                            Đã có tài khoản?
+                                            <a href="@Url.Action("Login", "Account")" class="login-link">
+                                                Đăng nhập ngay
+                                            </a>
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles {
+    <style>
+        /* Định nghĩa biến màu nếu chưa có trong global css */
+        :root {
+            --primary-color: #ff6b35; /* Màu cam chủ đạo */
+        }
+
+        .register-page {
+            /* Giữ nguyên background giống trang Login */
+            background: linear-gradient(135deg, #FFF5F0 0%, #FFE8DF 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .register-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-image {
+            /* Gradient đậm hơn chút để làm nổi bật text trắng */
+            background: linear-gradient(135deg, #FF8C5A 0%, var(--primary-color) 100%);
+            height: 100%;
+            min-height: 600px; /* Cao hơn login xíu vì form dài hơn */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .register-image .overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                /* Ảnh nền khác trang Login: Cảm giác tươi mới/nguyên liệu */
+                background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600') center/cover;
+                opacity: 0.2;
+            }
+
+        .brand-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+
+        .brand-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefits-list {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .benefit-item {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .register-form-container {
+            padding: 3rem;
+        }
+
+        /* Form Styles (Tái sử dụng từ Login) */
+        .form-floating .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            height: 58px;
+            padding-left: 1rem;
+        }
+
+            .form-floating .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.15);
+            }
+
+        .form-floating label {
+            padding-left: 1rem;
+            color: #6c757d;
+        }
+
+        .btn-toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+            .btn-toggle-password:hover {
+                color: var(--primary-color);
+            }
+
+        .link-term {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #FF8C5A 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.9rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+            .btn-register:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+                color: white;
+            }
+
+        /* Tái sử dụng các class phụ trợ */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+            .divider::before, .divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: #e9ecef;
+            }
+
+            .divider span {
+                padding: 0 1rem;
+                color: #6c757d;
+                font-size: 0.9rem;
+            }
+
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-social {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-google {
+            background: #fff;
+            border: 2px solid #db4437;
+            color: #db4437;
+        }
+
+            .btn-google:hover {
+                background: #db4437;
+                color: white;
+            }
+
+        .btn-facebook {
+            background: #fff;
+            border: 2px solid #4267B2;
+            color: #4267B2;
+        }
+
+            .btn-facebook:hover {
+                background: #4267B2;
+                color: white;
+            }
+
+        .login-link {
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .login-link:hover {
+                color: #e55a2a;
+                text-decoration: underline;
+            }
+
+        /* Responsive */
+        @@media (max-width: 991px) {
+            .register-page {
+                padding: 1rem;
+            }
+
+            .register-form-container {
+                padding: 2rem;
+            }
+
+            .min-vh-100 {
+                min-height: auto !important;
+                padding: 2rem 0;
+            }
+        }
+    </style>
+}
+
+@section scripts {
+    <script>
+        // Hàm toggle password chung cho cả 2 ô mật khẩu (Password & Confirm Password)
+        function togglePassword(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Form Validation Logic
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmInput = document.getElementById('confirmPassword');
+
+            // Reset trạng thái lỗi
+            confirmInput.classList.remove('is-invalid');
+
+            // 1. Kiểm tra điền đầy đủ
+            if (!fullName || !email || !password || !confirmPassword) {
+                e.preventDefault();
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+                return false;
+            }
+
+            // 2. Kiểm tra mật khẩu trùng khớp
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                confirmInput.classList.add('is-invalid'); // Hiện viền đỏ bootstrap
+                // Có thể scroll tới chỗ lỗi nếu form quá dài
+                return false;
+            }
+
+            // 3. Kiểm tra độ dài mật khẩu (Ví dụ: > 6 ký tự)
+            if (password.length < 6) {
+                e.preventDefault();
+                alert('Mật khẩu phải có ít nhất 6 ký tự!');
+                return false;
+            }
+        });
+
+        // Xóa lỗi khi người dùng bắt đầu gõ lại vào ô xác nhận mật khẩu
+        document.getElementById('confirmPassword').addEventListener('input', function () {
+            this.classList.remove('is-invalid');
+        });
+    </script>
+}

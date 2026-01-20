@@ -1,0 +1,254 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- HERO SECTION -->
+<section class="hero-section" style="background: linear-gradient(135deg, #FFF5F0 0%, #FFE8DF 100%); padding: 80px 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <p class="text-muted mb-2" style="font-size: 0.95rem;">Chào mừng đến với Sip & Savor</p>
+                <h1 class="display-4 fw-bold mb-3" style="color: #2D3142;">
+                    Tạo Ly <span style="color: #FF6B35;">Đồ Uống</span><br>Hoàn Hảo
+                </h1>
+                <p class="lead mb-4" style="color: #6c757d;">
+                    Mỗi ngụm là một trải nghiệm độc đáo với đồ uống được<br class="d-none d-lg-block">cá nhân hóa theo sở thích của bạn.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="@Url.Action("Products", "Products")" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-magic me-2"></i>Tùy chỉnh đồ uống
+                    </a>
+                    <a href="#featured" class="btn btn-outline-primary btn-lg px-4">
+                        Xem 5 loại món
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6 text-center">
+                <div class="hero-image" style="position: relative;">
+                    <div style="position: absolute; top: -20px; right: -20px; background: white; padding: 15px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 10;">
+                        <h4 class="mb-0" style="color: #FF6B35; font-weight: 700;">+100</h4>
+                        <small class="text-muted">Loại đồ uống</small>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&h=600&fit=crop" alt="Đồ uống" style="max-width: 100%; border-radius: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- POPULAR CATEGORIES -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0">Danh mục phổ biến</h2>
+            <a href="@Url.Action("Products", "Products")" class="text-decoration-none" style="color: #FF6B35; font-weight: 600;">
+                Xem tất cả danh mục <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <a href="@Url.Action("Products", "Products", new { category = "tra-sua" })" class="text-decoration-none">
+                    <div class="category-card text-center p-4" style="background: #FFF9F0; border-radius: 20px; transition: all 0.3s ease;">
+                        <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <i class="fas fa-mug-hot" style="font-size: 2rem; color: #F77F00;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1" style="color: #2D3142;">Trà Sữa</h5>
+                        <small class="text-muted">30+ món</small>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="@Url.Action("Products", "Products", new { category = "tra-trai-cay" })" class="text-decoration-none">
+                    <div class="category-card text-center p-4" style="background: #F0FFF4; border-radius: 20px; transition: all 0.3s ease;">
+                        <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <i class="fas fa-lemon" style="font-size: 2rem; color: #38A169;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1" style="color: #2D3142;">Trà Trái Cây</h5>
+                        <small class="text-muted">20+ món</small>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="@Url.Action("Products", "Products", new { category = "ca-phe" })" class="text-decoration-none">
+                    <div class="category-card text-center p-4" style="background: #FFF5F5; border-radius: 20px; transition: all 0.3s ease;">
+                        <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <i class="fas fa-coffee" style="font-size: 2rem; color: #C53030;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1" style="color: #2D3142;">Cà Phê</h5>
+                        <small class="text-muted">15+ món</small>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="@Url.Action("Products", "Products", new { category = "sinh-to" })" class="text-decoration-none">
+                    <div class="category-card text-center p-4" style="background: #F0F9FF; border-radius: 20px; transition: all 0.3s ease;">
+                        <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <i class="fas fa-blender" style="font-size: 2rem; color: #3182CE;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1" style="color: #2D3142;">Sinh Tố</h5>
+                        <small class="text-muted">25+ món</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED DRINKS -->
+<section id="featured" class="py-5" style="background-color: white;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Đồ uống nổi bật</h2>
+            <p class="text-muted">Khám phá những thức uống được yêu thích nhất</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Product 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="product-card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                    <div style="position: relative; overflow: hidden; background: linear-gradient(135deg, #004E64 0%, #006B84 100%); height: 280px;">
+                        <span class="badge bg-warning position-absolute top-0 start-0 m-3">Bán chạy</span>
+                        <img src="https://images.unsplash.com/photo-1578922746329-39564cf067ed?w=400&h=300&fit=crop" alt="Trà sữa" class="w-100 h-100" style="object-fit: cover; opacity: 0.9;">
+                    </div>
+                    <div class="p-4">
+                        <h5 class="fw-bold mb-2">Trà Sữa Trân Châu Đen</h5>
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <span class="ms-1">(152 đánh giá)</span>
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="h4 fw-bold mb-0" style="color: #FF6B35;">35.000₫</span>
+                            </div>
+                            <a href="@Url.Action("ProductDetail", "Products", new { id = 1 })" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="product-card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                    <div style="position: relative; overflow: hidden; background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%); height: 280px;">
+                        <span class="badge bg-danger position-absolute top-0 start-0 m-3">Mới</span>
+                        <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop" alt="Trà đào" class="w-100 h-100" style="object-fit: cover; opacity: 0.9;">
+                    </div>
+                    <div class="p-4">
+                        <h5 class="fw-bold mb-2">Trà Đào Cam Sả</h5>
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="far fa-star text-warning"></i>
+                            <span class="ms-1">(98 đánh giá)</span>
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="h4 fw-bold mb-0" style="color: #FF6B35;">42.000₫</span>
+                            </div>
+                            <a href="@Url.Action("ProductDetail", "Products", new { id = 2 })" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="product-card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                    <div style="position: relative; overflow: hidden; background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%); height: 280px;">
+                        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop" alt="Cà phê" class="w-100 h-100" style="object-fit: cover; opacity: 0.9;">
+                    </div>
+                    <div class="p-4">
+                        <h5 class="fw-bold mb-2">Cà Phê Sữa Đá</h5>
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <span class="ms-1">(201 đánh giá)</span>
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="h4 fw-bold mb-0" style="color: #FF6B35;">28.000₫</span>
+                            </div>
+                            <a href="@Url.Action("ProductDetail", "Products", new { id = 3 })" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="@Url.Action("Products", "Products")" class="btn btn-outline-primary btn-lg px-5">
+                Xem tất cả sản phẩm <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- REWARDS SECTION -->
+<section class="py-5" style="background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 text-white mb-4 mb-lg-0">
+                <h2 class="fw-bold mb-3">Tham gia chương trình thưởng Sip</h2>
+                <p class="mb-4" style="font-size: 1.1rem; opacity: 0.95;">
+                    Kiếm điểm với mỗi đơn hàng và nhận thưởng miễn phí ngay hôm nay!
+                    Đăng ký ngay để nhận ưu đãi đặc biệt.
+                </p>
+                <form class="d-flex gap-2" style="max-width: 500px;">
+                    <input type="email" class="form-control form-control-lg" placeholder="Nhập email của bạn" style="border-radius: 50px; border: none; padding: 0.75rem 1.5rem;">
+                    <button type="submit" class="btn btn-dark btn-lg px-4" style="border-radius: 50px; white-space: nowrap;">
+                        Đăng ký
+                    </button>
+                </form>
+            </div>
+
+            <div class="col-lg-5 text-center">
+                <div class="rewards-icon" style="width: 200px; height: 200px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+                    <i class="fas fa-gift" style="font-size: 5rem; color: white;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .category-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important;
+    }
+
+    .product-card .btn-primary {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>

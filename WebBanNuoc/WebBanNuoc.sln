@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBanNuoc", "WebBanNuoc.csproj", "{B9689E4C-D1F2-44BD-A8BB-B7BC02CD574B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9689E4C-D1F2-44BD-A8BB-B7BC02CD574B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9689E4C-D1F2-44BD-A8BB-B7BC02CD574B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9689E4C-D1F2-44BD-A8BB-B7BC02CD574B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9689E4C-D1F2-44BD-A8BB-B7BC02CD574B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {37963F8C-8076-43DE-9403-A9A1F545CC12}
+	EndGlobalSection
+EndGlobal

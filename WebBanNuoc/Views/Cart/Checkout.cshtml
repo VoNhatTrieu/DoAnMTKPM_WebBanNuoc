@@ -1,0 +1,358 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("~/Views/Cart/Checkout.cshtml")
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2 class="fw-bold">
+                <i class="fas fa-credit-card me-2" style="color: #FF6B35;"></i>
+                Thanh toán an toàn
+            </h2>
+            <nav aria-label="breadcrumb" class="mt-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Cart", "Home")">Giỏ hàng</a></li>
+                    <li class="breadcrumb-item active">Thanh toán</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- THÔNG TIN GIAO HÀNG -->
+        <div class="col-lg-7">
+            <!-- Shipping Details -->
+            <div class="card border-0 shadow-sm mb-4" style="border-radius: 20px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="fas fa-shipping-fast me-2 text-primary"></i>
+                        Thông tin giao hàng
+                    </h5>
+
+                    <form id="checkoutForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" id="fullName" required style="border-radius: 12px;">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control form-control-lg" id="phone" required style="border-radius: 12px;">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Email</label>
+                                <input type="email" class="form-control form-control-lg" id="email" style="border-radius: 12px;">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg mb-2" id="address" placeholder="Số nhà, tên đường" required style="border-radius: 12px;">
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select form-select-lg" id="city" required style="border-radius: 12px;">
+                                    <option value="">Chọn Tỉnh/TP</option>
+                                    <option value="HCM">TP. Hồ Chí Minh</option>
+                                    <option value="HN">Hà Nội</option>
+                                    <option value="DN">Đà Nẵng</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select form-select-lg" id="district" required style="border-radius: 12px;">
+                                    <option value="">Chọn Quận/Huyện</option>
+                                    <option value="Q1">Quận 1</option>
+                                    <option value="Q3">Quận 3</option>
+                                    <option value="Q5">Quận 5</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select form-select-lg" id="ward" required style="border-radius: 12px;">
+                                    <option value="">Chọn Phường/Xã</option>
+                                    <option value="P1">Phường 1</option>
+                                    <option value="P2">Phường 2</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Ghi chú đơn hàng (tùy chọn)</label>
+                                <textarea class="form-control" id="notes" rows="3" placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..." style="border-radius: 12px;"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="card border-0 shadow-sm" style="border-radius: 20px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="fas fa-wallet me-2 text-success"></i>
+                        Phương thức thanh toán
+                    </h5>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="payment" id="cod" value="COD" checked>
+                            <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4" for="cod" style="border-radius: 16px; border-width: 2px;">
+                                <i class="fas fa-money-bill-wave fa-2x mb-3" style="color: #28a745;"></i>
+                                <span class="fw-bold">Tiền mặt</span>
+                                <small class="text-muted mt-2">COD</small>
+                            </label>
+                        </div>
+
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="payment" id="momo" value="MOMO">
+                            <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4" for="momo" style="border-radius: 16px; border-width: 2px;">
+                                <i class="fas fa-mobile-alt fa-2x mb-3" style="color: #D82D8B;"></i>
+                                <span class="fw-bold">MoMo</span>
+                                <small class="text-muted mt-2">Ví điện tử</small>
+                            </label>
+                        </div>
+
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="payment" id="banking" value="BANKING">
+                            <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4" for="banking" style="border-radius: 16px; border-width: 2px;">
+                                <i class="fas fa-university fa-2x mb-3" style="color: #0066CC;"></i>
+                                <span class="fw-bold">Ngân hàng</span>
+                                <small class="text-muted mt-2">ATM/Internet Banking</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-4 d-flex align-items-center" style="border-radius: 12px; border: none; background: #E8F4FD;">
+                        <i class="fas fa-info-circle me-3" style="font-size: 1.5rem; color: #0066CC;"></i>
+                        <div>
+                            <strong>Lưu ý:</strong> Thanh toán online để được ưu tiên xử lý đơn hàng nhanh hơn.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ORDER SUMMARY -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm" style="border-radius: 20px; position: sticky; top: 100px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="fas fa-receipt me-2 text-warning"></i>
+                        Tóm tắt đơn hàng
+                    </h5>
+
+                    <!-- Danh sách sản phẩm -->
+                    <div id="orderItems" class="mb-4" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+
+                    <hr>
+
+                    <!-- Pricing -->
+                    <div class="pricing-details">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Tạm tính</span>
+                            <span class="fw-bold" id="checkoutSubtotal">0₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Phí vận chuyển</span>
+                            <span class="fw-bold" id="checkoutShipping">20.000₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3" id="checkoutDiscountRow" style="display: none !important;">
+                            <span class="text-success">Giảm giá</span>
+                            <span class="text-success fw-bold" id="checkoutDiscount">0₫</span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="h5 fw-bold">Tổng cộng</span>
+                            <span class="h4 fw-bold" style="color: #FF6B35;" id="checkoutTotal">0₫</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3" id="placeOrderBtn" onclick="placeOrder()">
+                            <i class="fas fa-check-circle me-2"></i>Đặt hàng
+                        </button>
+
+                        <a href="@Url.Action("Cart", "Home")" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
+                        </a>
+                    </div>
+
+                    <!-- Security Badge -->
+                    <div class="mt-4 text-center">
+                        <div class="d-flex justify-content-center align-items-center gap-3 text-muted small">
+                            <i class="fas fa-lock"></i>
+                            <span>Thanh toán an toàn & bảo mật</span>
+                        </div>
+                        <div class="mt-3">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/200px-Visa_Inc._logo.svg.png" height="24" class="me-2" alt="Visa">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png" height="24" class="me-2" alt="Mastercard">
+                            <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" height="24" alt="MoMo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-check:checked + .btn-outline-primary {
+        background-color: #FFF5F0;
+        border-color: #FF6B35;
+        color: #FF6B35;
+    }
+
+    .order-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+    }
+
+    .order-item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 1rem;
+    }
+
+    .order-item-details {
+        flex: 1;
+    }
+
+    .order-item-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+
+    .order-item-options {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .order-item-price {
+        font-weight: 700;
+        color: #FF6B35;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #FF6B35;
+        box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+    }
+</style>
+
+@section scripts {
+    <script>
+    let cart = [];
+
+    function loadOrderSummary() {
+        cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+        if (cart.length === 0) {
+            window.location.href = '@Url.Action("Cart", "Home")';
+            return;
+        }
+
+        renderOrderItems();
+        calculateCheckoutTotal();
+    }
+
+    function renderOrderItems() {
+        const orderItemsContainer = document.getElementById('orderItems');
+        let html = '';
+
+        cart.forEach(item => {
+            const toppingsText = item.toppings && item.toppings.length > 0
+                ? item.toppings.join(', ')
+                : 'Không topping';
+
+            html += `
+                <div class="order-item">
+                    <img src="${item.image}" alt="${item.name}" class="order-item-image">
+                    <div class="order-item-details">
+                        <div class="order-item-name">${item.name}</div>
+                        <div class="order-item-options">
+                            Size ${item.size} • ${item.sugar} • ${item.ice}<br>
+                            ${toppingsText}
+                        </div>
+                        <div class="mt-1">
+                            <span class="badge bg-secondary">x${item.quantity}</span>
+                        </div>
+                    </div>
+                    <div class="order-item-price">
+                        ${(item.price * item.quantity).toLocaleString('vi-VN')}₫
+                    </div>
+                </div>
+            `;
+        });
+
+        orderItemsContainer.innerHTML = html;
+    }
+
+    function calculateCheckoutTotal() {
+        let subtotal = 0;
+        cart.forEach(item => {
+            subtotal += item.price * item.quantity;
+        });
+
+        const shipping = subtotal >= 100000 ? 0 : 20000;
+        const discount = 0; // Có thể lấy từ localStorage nếu đã áp dụng voucher
+        const total = subtotal + shipping - discount;
+
+        document.getElementById('checkoutSubtotal').textContent = subtotal.toLocaleString('vi-VN') + '₫';
+        document.getElementById('checkoutShipping').textContent = shipping === 0 ? 'Miễn phí' : shipping.toLocaleString('vi-VN') + '₫';
+        document.getElementById('checkoutTotal').textContent = total.toLocaleString('vi-VN') + '₫';
+    }
+
+    function placeOrder() {
+        // Validate form
+        const fullName = document.getElementById('fullName').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+        const city = document.getElementById('city').value;
+        const district = document.getElementById('district').value;
+        const ward = document.getElementById('ward').value;
+
+        if (!fullName || !phone || !address || !city || !district || !ward) {
+            alert('Vui lòng điền đầy đủ thông tin giao hàng!');
+            return;
+        }
+
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+        const order = {
+            customer: {
+                fullName,
+                phone,
+                email: document.getElementById('email').value,
+                address: `${address}, ${ward}, ${district}, ${city}`
+            },
+            items: cart,
+            paymentMethod,
+            notes: document.getElementById('notes').value,
+            orderDate: new Date().toISOString(),
+            status: 'Chờ xác nhận'
+        };
+
+        // Save order to localStorage (in real app, send to API)
+        let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        orders.push(order);
+        localStorage.setItem('orders', JSON.stringify(orders));
+
+        // Clear cart
+        localStorage.removeItem('cart');
+        updateCartCount();
+
+        // Show success message
+        alert('Đặt hàng thành công! Cảm ơn bạn đã mua hàng.');
+
+        // Redirect to home or order confirmation page
+        window.location.href = '@Url.Action("Index", "Home")';
+    }
+
+    // Load order summary on page load
+    loadOrderSummary();
+    </script>
+}

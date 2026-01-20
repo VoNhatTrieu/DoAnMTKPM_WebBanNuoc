@@ -1,0 +1,337 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="fw-bold mb-4">
+                <i class="fas fa-shopping-cart me-2" style="color: #FF6B35;"></i>
+                Giỏ hàng của bạn
+            </h2>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- DANH SÁCH SẢN PHẨM -->
+        <div class="col-lg-8">
+            <div id="cartItems">
+                <!-- Giỏ hàng trống -->
+                <div id="emptyCart" class="text-center py-5" style="display: none;">
+                    <i class="fas fa-shopping-cart" style="font-size: 5rem; color: #e9ecef;"></i>
+                    <h4 class="mt-4 text-muted">Giỏ hàng trống</h4>
+                    <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
+                    <a href="@Url.Action("Products", "Home")" class="btn btn-primary mt-3">
+                        <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                    </a>
+                </div>
+
+                <!-- Danh sách sản phẩm sẽ được render bằng JavaScript -->
+            </div>
+        </div>
+
+        <!-- TỔNG KẾT -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm" style="border-radius: 20px; position: sticky; top: 100px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Tóm tắt đơn hàng</h5>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Tạm tính</span>
+                        <span class="fw-bold" id="subtotal">0₫</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Phí vận chuyển</span>
+                        <span class="fw-bold" id="shipping">20.000₫</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted mb-2">Mã giảm giá</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Nhập mã" id="voucherCode" style="border-radius: 12px 0 0 12px;">
+                            <button class="btn btn-outline-primary" type="button" id="applyVoucher" style="border-radius: 0 12px 12px 0;">
+                                Áp dụng
+                            </button>
+                        </div>
+                        <small class="text-success" id="voucherMessage" style="display: none;"></small>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3" id="discountRow" style="display: none !important;">
+                        <span class="text-success">Giảm giá</span>
+                        <span class="text-success fw-bold" id="discount">0₫</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="h5 fw-bold">Tổng cộng</span>
+                        <span class="h4 fw-bold" style="color: #FF6B35;" id="total">0₫</span>
+                    </div>
+
+                    <a href="@Url.Action("Checkout", "Home")" class="btn btn-primary btn-lg w-100 mb-3" id="checkoutBtn">
+                        <i class="fas fa-credit-card me-2"></i>Thanh toán
+                    </a>
+
+                    <a href="@Url.Action("Products", "Home")" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                    </a>
+
+                    <!-- KHUYẾN MÃI -->
+                    <div class="mt-4 p-3" style="background: #FFF5F0; border-radius: 12px;">
+                        <h6 class="fw-bold mb-2" style="color: #FF6B35;">
+                            <i class="fas fa-gift me-2"></i>Ưu đãi đặc biệt
+                        </h6>
+                        <ul class="small mb-0" style="color: #6c757d;">
+                            <li>Miễn phí ship cho đơn từ 100.000₫</li>
+                            <li>Giảm 15% cho đơn từ 200.000₫</li>
+                            <li>Tích điểm đổi quà hấp dẫn</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cart-item {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+
+        .cart-item:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+    .cart-item-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 12px;
+        background: #f8f9fa;
+    }
+
+    .quantity-control {
+        display: inline-flex;
+        align-items: center;
+        border: 2px solid #e9ecef;
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+        .quantity-control button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: white;
+            color: #2D3142;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .quantity-control button:hover {
+                background: #FF6B35;
+                color: white;
+            }
+
+        .quantity-control input {
+            width: 50px;
+            text-align: center;
+            border: none;
+            font-weight: bold;
+            color: #2D3142;
+        }
+
+    .remove-item {
+        color: #dc3545;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .remove-item:hover {
+            color: #bb2d3b;
+            transform: scale(1.1);
+        }
+</style>
+
+@section scripts {
+    <script>
+    let cart = [];
+    const shippingFee = 20000;
+    let discountAmount = 0;
+    let discountPercent = 0;
+
+    function loadCart() {
+        cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        renderCart();
+        calculateTotal();
+    }
+
+    function renderCart() {
+        const cartItemsContainer = document.getElementById('cartItems');
+        const emptyCart = document.getElementById('emptyCart');
+
+        if (cart.length === 0) {
+            emptyCart.style.display = 'block';
+            cartItemsContainer.innerHTML = '';
+            return;
+        }
+
+        emptyCart.style.display = 'none';
+
+        let html = '';
+        cart.forEach((item, index) => {
+            const toppingsText = item.toppings && item.toppings.length > 0
+                ? item.toppings.join(', ')
+                : 'Không topping';
+
+            html += `
+                <div class="cart-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center mb-3 mb-md-0">
+                            <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                        </div>
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <h6 class="fw-bold mb-2">${item.name}</h6>
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-ruler-vertical me-1"></i>Size: ${item.size}
+                            </p>
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-cube-sugar me-1"></i>Đường: ${item.sugar}
+                            </p>
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-snowflake me-1"></i>Đá: ${item.ice}
+                            </p>
+                            <p class="text-muted small mb-0">
+                                <i class="fas fa-plus-circle me-1"></i>${toppingsText}
+                            </p>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="quantity-control">
+                                <button onclick="decreaseQuantity(${index})">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="text" value="${item.quantity}" readonly>
+                                <button onclick="increaseQuantity(${index})">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3 mb-md-0">
+                            <h6 class="fw-bold mb-0" style="color: #FF6B35;">
+                                ${(item.price * item.quantity).toLocaleString('vi-VN')}₫
+                            </h6>
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <i class="fas fa-trash remove-item" onclick="removeItem(${index})"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        cartItemsContainer.innerHTML = html;
+    }
+
+    function increaseQuantity(index) {
+        cart[index].quantity++;
+        saveCart();
+        renderCart();
+        calculateTotal();
+    }
+
+    function decreaseQuantity(index) {
+        if (cart[index].quantity > 1) {
+            cart[index].quantity--;
+            saveCart();
+            renderCart();
+            calculateTotal();
+        }
+    }
+
+    function removeItem(index) {
+        if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+            cart.splice(index, 1);
+            saveCart();
+            renderCart();
+            calculateTotal();
+        }
+    }
+
+    function calculateTotal() {
+        let subtotal = 0;
+        cart.forEach(item => {
+            subtotal += item.price * item.quantity;
+        });
+
+        // Áp dụng giảm giá
+        if (discountPercent > 0) {
+            discountAmount = Math.round(subtotal * discountPercent / 100);
+        }
+
+        // Miễn phí ship nếu đơn >= 100k
+        let shipping = subtotal >= 100000 ? 0 : shippingFee;
+        let total = subtotal + shipping - discountAmount;
+
+        // Cập nhật UI
+        document.getElementById('subtotal').textContent = subtotal.toLocaleString('vi-VN') + '₫';
+        document.getElementById('shipping').textContent = shipping === 0 ? 'Miễn phí' : shipping.toLocaleString('vi-VN') + '₫';
+        document.getElementById('total').textContent = total.toLocaleString('vi-VN') + '₫';
+
+        if (discountAmount > 0) {
+            document.getElementById('discountRow').style.display = 'flex !important';
+            document.getElementById('discount').textContent = '-' + discountAmount.toLocaleString('vi-VN') + '₫';
+        } else {
+            document.getElementById('discountRow').style.display = 'none !important';
+        }
+
+        // Disable checkout button if cart is empty
+        document.getElementById('checkoutBtn').style.display = cart.length === 0 ? 'none' : 'block';
+
+        // Update cart count in navbar
+        updateCartCount();
+    }
+
+    function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    // Apply voucher
+    document.getElementById('applyVoucher').addEventListener('click', function() {
+        const code = document.getElementById('voucherCode').value.trim().toUpperCase();
+        const voucherMessage = document.getElementById('voucherMessage');
+
+        // Demo voucher codes
+        const vouchers = {
+            'GIAM10': 10,
+            'GIAM15': 15,
+            'GIAM20': 20,
+            'FREESHIP': 0 // Miễn phí ship
+        };
+
+        if (vouchers.hasOwnProperty(code)) {
+            discountPercent = vouchers[code];
+            voucherMessage.textContent = `Đã áp dụng mã giảm ${discountPercent}%`;
+            voucherMessage.style.display = 'block';
+            calculateTotal();
+        } else {
+            voucherMessage.textContent = 'Mã giảm giá không hợp lệ';
+            voucherMessage.classList.remove('text-success');
+            voucherMessage.classList.add('text-danger');
+            voucherMessage.style.display = 'block';
+            discountPercent = 0;
+            discountAmount = 0;
+            calculateTotal();
+        }
+    });
+
+    // Load cart on page load
+    loadCart();
+    </script>
+}

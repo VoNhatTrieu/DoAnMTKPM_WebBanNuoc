@@ -24,27 +24,7 @@ namespace WebBanNuoc.Controllers
         }
 
         // GET: Products
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // Trang chi tiết sản phẩm
-        public ActionResult ProductDetail(int id)
-        {
-            var product = _productService.GetProductById(id);
-            if (product == null)
-            {
-                return HttpNotFound();
-            }
-
-            ViewBag.Product = product;
-            ViewBag.ProductId = id;
-            return View();
-        }
-
-        // Danh sách sản phẩm theo danh mục
-        public ActionResult Products(string category = "", string sort = "")
+        public ActionResult Index(string category = "", string sort = "")
         {
             IEnumerable<Models.DTOs.ProductDTO> products;
 
@@ -60,7 +40,21 @@ namespace WebBanNuoc.Controllers
             ViewBag.Category = category;
             ViewBag.Sort = sort;
             ViewBag.Products = products;
-            return View("Index");
+            return View();
+        }
+
+        // Trang chi tiết sản phẩm
+        public ActionResult ProductDetail(int id)
+        {
+            var product = _productService.GetProductById(id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.Product = product;
+            ViewBag.ProductId = id;
+            return View();
         }
 
         public ActionResult Search(string category, string sort, string keyword)

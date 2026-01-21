@@ -82,7 +82,14 @@ namespace WebBanNuoc.Controllers
         {
             return View();
         }
+            public ActionResult Policy(string type)
+        {
+            ViewBag.Type = type;
+            return View();
+        }
 
     }
+
 }
+
 

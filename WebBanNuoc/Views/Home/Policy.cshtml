@@ -1,0 +1,193 @@
+﻿@{
+    string type = ViewBag.Type as string ?? "terms";
+    string title = "";
+    string icon = "";
+
+    if (type == "terms")
+    {
+        title = "Điều khoản sử dụng";
+        icon = "fa-file-contract";
+    }
+    else if (type == "privacy")
+    {
+        title = "Chính sách bảo mật";
+        icon = "fa-user-shield";
+    }
+    else if (type == "cookies")
+    {
+        title = "Cookies";
+        icon = "fa-cookie-bite";
+    }
+}
+
+<!-- THANH TRƯỢT TIẾN TRÌNH ĐỌC -->
+<div id="policy-progress"></div>
+
+<style>
+    /* Thanh trượt trên đầu trang */
+    #policy-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        width: 0%;
+        background: linear-gradient(90deg, #fd7e14, #ffc107);
+        z-index: 9999;
+    }
+
+    /* Khoảng thở cho toàn trang policy */
+    .policy-page {
+        margin-bottom: 100px;
+    }
+
+    /* Header */
+    .policy-header {
+        border-left: 5px solid #fd7e14;
+        padding-left: 15px;
+        margin-bottom: 30px;
+    }
+
+    /* Box nội dung */
+    .policy-box {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        margin-bottom: 40px;
+    }
+
+        .policy-box ul li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+    /* Ghi chú */
+    .policy-note {
+        background: #f8f9fa;
+        border-left: 4px solid #0d6efd;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-top: 25px;
+    }
+</style>
+
+<div class="container my-5 policy-page">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <!-- TIÊU ĐỀ -->
+            <div class="policy-header">
+                <h2 class="fw-bold mb-1">
+                    <i class="fa @icon text-warning me-2"></i>@title
+                </h2>
+                <p class="text-muted mb-0">
+                    Thông tin pháp lý khi sử dụng website Sip & Savor
+                </p>
+            </div>
+
+            <!-- NỘI DUNG -->
+            <div class="policy-box">
+
+                @if (type == "terms")
+                {
+                    <p>
+                        Khi truy cập và sử dụng website <b>Sip & Savor</b>, bạn được xem là đã đọc,
+                        hiểu và đồng ý với các điều khoản dưới đây.
+                    </p>
+
+                    <ul>
+                        <li>
+                            Người dùng cam kết cung cấp thông tin cá nhân <b>chính xác, đầy đủ</b>
+                            khi đăng ký tài khoản hoặc đặt hàng.
+                        </li>
+                        <li>
+                            Không sử dụng website cho các hành vi vi phạm pháp luật, gian lận,
+                            phá hoại hệ thống hoặc ảnh hưởng đến trải nghiệm người dùng khác.
+                        </li>
+                        <li>
+                            Sip & Savor có quyền từ chối hoặc hủy đơn hàng trong trường hợp phát hiện
+                            thông tin không hợp lệ.
+                        </li>
+                        <li>
+                            Nội dung, hình ảnh và thương hiệu trên website thuộc quyền sở hữu của
+                            Sip & Savor và không được sao chép khi chưa có sự cho phép.
+                        </li>
+                        <li>
+                            Điều khoản có thể được cập nhật theo từng thời điểm mà không cần báo trước.
+                        </li>
+                    </ul>
+                }
+
+                else if (type == "privacy")
+                {
+                    <p>
+                        Sip & Savor cam kết bảo vệ quyền riêng tư và thông tin cá nhân của khách hàng
+                        khi sử dụng dịch vụ trên website.
+                    </p>
+
+                    <ul>
+                        <li>
+                            Thông tin cá nhân (họ tên, số điện thoại, email, địa chỉ giao hàng)
+                            chỉ được sử dụng cho mục đích xử lý đơn hàng và chăm sóc khách hàng.
+                        </li>
+                        <li>
+                            Chúng tôi <b>không chia sẻ, mua bán hoặc trao đổi</b> thông tin khách hàng
+                            cho bên thứ ba dưới bất kỳ hình thức nào.
+                        </li>
+                        <li>
+                            Dữ liệu được lưu trữ và bảo mật bằng các biện pháp kỹ thuật phù hợp
+                            nhằm hạn chế truy cập trái phép.
+                        </li>
+                        <li>
+                            Khách hàng có quyền yêu cầu chỉnh sửa hoặc xóa thông tin cá nhân
+                            thông qua bộ phận hỗ trợ.
+                        </li>
+                    </ul>
+                }
+
+                else if (type == "cookies")
+                {
+                    <p>
+                        Website Sip & Savor sử dụng cookies nhằm nâng cao trải nghiệm người dùng
+                        và tối ưu hoạt động của hệ thống.
+                    </p>
+
+                    <ul>
+                        <li>
+                            Cookies giúp ghi nhớ trạng thái đăng nhập và giỏ hàng của bạn.
+                        </li>
+                        <li>
+                            Hỗ trợ cá nhân hóa nội dung hiển thị dựa trên hành vi truy cập.
+                        </li>
+                        <li>
+                            Dữ liệu cookies được dùng cho mục đích phân tích và cải thiện chất lượng dịch vụ.
+                        </li>
+                        <li>
+                            Người dùng có thể tắt cookies trong trình duyệt,
+                            tuy nhiên một số chức năng có thể bị hạn chế.
+                        </li>
+                    </ul>
+                }
+
+                <div class="policy-note">
+                    <i class="fa fa-info-circle text-primary me-2"></i>
+                    Mọi thắc mắc vui lòng liên hệ hotline <b>0123 456 789</b>.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Thanh trượt theo scroll
+    window.addEventListener("scroll", function () {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight =
+            document.documentElement.scrollHeight -
+            document.documentElement.clientHeight;
+
+        const progress = (scrollTop / scrollHeight) * 100;
+        document.getElementById("policy-progress").style.width = progress + "%";
+    });
+</script>

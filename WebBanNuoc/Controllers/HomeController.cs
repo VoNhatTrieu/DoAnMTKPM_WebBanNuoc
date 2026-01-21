@@ -63,5 +63,26 @@ namespace WebBanNuoc.Controllers
             var product = _productService.GetProductById(id);
             return Json(product, JsonRequestBehavior.AllowGet);
         }
+            public ActionResult Delivery()
+        {
+            return View();
+        }
+
+        public ActionResult Return()
+        {
+            return View();
+        }
+
+        public ActionResult Guide()
+        {
+            return View();
+        }
+
+        public ActionResult FAQ()
+        {
+            return View();
+        }
+
     }
 }
+

@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Hướng dẫn đặt hàng";
+}
+
+<style>
+    .step-box {
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        padding: 25px;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+        .step-box:hover {
+            border-color: #0d6efd;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        }
+
+    .step-number {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: #0d6efd;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <!-- TIÊU ĐỀ -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">📘 Hướng dẫn đặt hàng</h2>
+                <p class="text-muted">
+                    Chỉ với 4 bước đơn giản để có ngay ly nước yêu thích
+                </p>
+            </div>
+
+            <!-- STEPS -->
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <div class="step-box">
+                        <div class="step-number">1</div>
+                        <h5 class="fw-bold">Chọn sản phẩm</h5>
+                        <p class="mb-0">
+                            Truy cập menu và chọn đồ uống bạn yêu thích.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="step-box">
+                        <div class="step-number">2</div>
+                        <h5 class="fw-bold">Thêm vào giỏ hàng</h5>
+                        <p class="mb-0">
+                            Điều chỉnh số lượng và thêm sản phẩm vào giỏ.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="step-box">
+                        <div class="step-number">3</div>
+                        <h5 class="fw-bold">Xác nhận đơn hàng</h5>
+                        <p class="mb-0">
+                            Kiểm tra thông tin và xác nhận đặt hàng.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="step-box">
+                        <div class="step-number">4</div>
+                        <h5 class="fw-bold">Nhận hàng & thanh toán</h5>
+                        <p class="mb-0">
+                            Nhận hàng tại nhà và thanh toán khi nhận.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- LƯU Ý -->
+            <div class="text-center mt-5">
+                <p class="fw-bold mb-1">💡 Lưu ý</p>
+                <p class="text-muted">
+                    Vui lòng cung cấp địa chỉ và số điện thoại chính xác để giao hàng nhanh nhất.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

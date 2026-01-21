@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "Câu hỏi thường gặp";
+}
+
+<style>
+    /* FAQ nâng cao */
+    .faq-accordion .accordion-button {
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .faq-accordion .accordion-button:not(.collapsed) {
+            background-color: #f0f9ff;
+            color: #0d6efd;
+            box-shadow: none;
+        }
+
+    .faq-accordion .accordion-item {
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 12px;
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+
+        .faq-accordion .accordion-item:hover {
+            border-color: #0d6efd;
+        }
+
+    /* Mũi tên xoay mượt */
+    .accordion-button::after {
+        transition: transform 0.3s ease;
+    }
+
+    .accordion-button:not(.collapsed)::after {
+        transform: rotate(180deg);
+    }
+
+    /* Nội dung */
+    .faq-accordion .accordion-body {
+        background-color: #ffffff;
+        line-height: 1.7;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <!-- TIÊU ĐỀ -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">❓ Câu hỏi thường gặp</h2>
+                <p class="text-muted">
+                    Những thắc mắc phổ biến khi đặt đồ uống tại WebBanNuoc
+                </p>
+            </div>
+
+            <!-- FAQ -->
+            <div class="accordion faq-accordion" id="faqAccordion">
+
+                <!-- CÂU 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#faq1">
+                            ⏰ Quán mở cửa từ mấy giờ?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show"
+                         data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Quán hoạt động từ <b>07:00 đến 22:00</b> mỗi ngày, kể cả cuối tuần.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CÂU 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#faq2">
+                            🚚 Thời gian giao hàng mất bao lâu?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse"
+                         data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Thời gian giao hàng trung bình từ <b>30 – 60 phút</b> tùy khu vực.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CÂU 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#faq3">
+                            💳 Có hỗ trợ thanh toán khi nhận hàng không?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse"
+                         data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Hiện tại cửa hàng hỗ trợ <b>thanh toán tiền mặt</b> khi nhận hàng.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CÂU 4 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#faq4">
+                            🔄 Nếu đơn hàng bị lỗi thì xử lý thế nào?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse"
+                         data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Vui lòng liên hệ hotline để được hỗ trợ đổi/trả trong vòng <b>24 giờ</b>.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- HOTLINE -->
+            <div class="text-center mt-5">
+                <p class="fw-bold mb-1">📞 Hotline hỗ trợ</p>
+                <p class="text-primary fs-5">0123456789</p>
+            </div>
+
+        </div>
+    </div>
+</div>

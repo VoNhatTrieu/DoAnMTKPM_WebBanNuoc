@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Chính sách đổi trả";
+}
+
+<style>
+    .return-card {
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+
+        .return-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        }
+
+    .return-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .return-ok {
+        color: #198754;
+    }
+
+    .return-no {
+        color: #dc3545;
+    }
+
+    .return-note {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <!-- TIÊU ĐỀ -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">🔄 Chính sách đổi trả</h2>
+                <p class="text-muted">
+                    Cam kết đảm bảo quyền lợi khách hàng khi mua hàng tại WebBanNuoc
+                </p>
+            </div>
+
+            <!-- ĐƯỢC ĐỔI TRẢ -->
+            <div class="card return-card mb-4">
+                <div class="card-body text-center">
+                    <div class="return-icon return-ok">✔</div>
+                    <h5 class="fw-bold">Được áp dụng đổi / trả</h5>
+                    <ul class="list-unstyled mt-3 mb-0">
+                        <li>Sản phẩm bị lỗi trong quá trình vận chuyển</li>
+                        <li>Giao sai sản phẩm hoặc thiếu món</li>
+                        <li>Phản hồi trong vòng <b>24 giờ</b> kể từ khi nhận hàng</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- KHÔNG ĐƯỢC ĐỔI TRẢ -->
+            <div class="card return-card mb-4">
+                <div class="card-body text-center">
+                    <div class="return-icon return-no">✖</div>
+                    <h5 class="fw-bold">Không áp dụng đổi / trả</h5>
+                    <ul class="list-unstyled mt-3 mb-0">
+                        <li>Sản phẩm đã sử dụng quá 50%</li>
+                        <li>Khách hàng đổi ý sau khi đặt hàng</li>
+                        <li>Không có bằng chứng đơn hàng</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUY TRÌNH -->
+            <div class="return-note mb-4">
+                <h6 class="fw-bold">📌 Quy trình xử lý</h6>
+                <ol class="mb-0">
+                    <li>Liên hệ hotline hoặc fanpage</li>
+                    <li>Cung cấp mã đơn hàng và hình ảnh sản phẩm</li>
+                    <li>Nhân viên xác nhận và hỗ trợ đổi / hoàn tiền</li>
+                </ol>
+            </div>
+
+            <!-- HOTLINE -->
+            <div class="text-center mt-4">
+                <p class="fw-bold mb-1">📞 Hotline hỗ trợ đổi trả</p>
+                <p class="text-danger fs-5 mb-0">0909 123 456</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+

@@ -56,7 +56,7 @@ namespace WebBanNuoc.Controllers
             return Json(products, JsonRequestBehavior.AllowGet);
         }
 
-        // API endpoint để lấy chi tiết sản phẩm
+        
         [HttpGet]
         public JsonResult GetProduct(int id)
         {

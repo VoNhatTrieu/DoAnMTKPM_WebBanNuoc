@@ -1,0 +1,106 @@
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fa fa-user-circle me-2"></i>Thông tin tài khoản
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="fa fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            <div class="profile-avatar mb-3">
+                                <i class="fa fa-user-circle fa-5x text-primary"></i>
+                            </div>
+                            <h5>@ViewBag.UserName</h5>
+                            <p class="text-muted">Khách hàng</p>
+                        </div>
+                        <div class="col-md-8">
+                            <h5 class="mb-3">Thông tin cá nhân</h5>
+                            
+                            <div class="mb-3">
+                                <label class="text-muted small">Họ và tên</label>
+                                <p class="fw-bold">@ViewBag.UserName</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small">Email</label>
+                                <p class="fw-bold">@ViewBag.UserEmail</p>
+                            </div>
+
+                            @if (ViewBag.PhoneNumber != null)
+                            {
+                                <div class="mb-3">
+                                    <label class="text-muted small">Số điện thoại</label>
+                                    <p class="fw-bold">@ViewBag.PhoneNumber</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-shopping-bag fa-2x text-primary mb-2"></i>
+                                    <h6>Lịch sử đơn hàng</h6>
+                                    <a href="@Url.Action("Orders", "Account")" class="btn btn-sm btn-primary mt-2">
+                                        Xem đơn hàng
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-info">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-star fa-2x text-warning mb-2"></i>
+                                    <h6>Điểm tích lũy</h6>
+                                    <p class="mb-0 text-muted">Đang cập nhật</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+                            <i class="fa fa-home me-2"></i>Về trang chủ
+                        </a>
+                        <a href="@Url.Action("Logout", "Account")" class="btn btn-outline-danger ms-2">
+                            <i class="fa fa-sign-out-alt me-2"></i>Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-avatar {
+        padding: 20px;
+    }
+    
+    .card {
+        border-radius: 10px;
+    }
+    
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+</style>

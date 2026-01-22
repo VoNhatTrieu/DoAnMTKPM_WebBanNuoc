@@ -76,14 +76,37 @@
 
                     <!-- ĐĂNG NHẬP / TÀI KHOẢN -->
                     <div class="dropdown">
-                        <button class="user-menu-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fa fa-user"></i> Tài khoản
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="@Url.Action("Login", "Account")"><i class="fa fa-sign-in-alt me-2"></i> Đăng nhập</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("Register", "Account")"><i class="fa fa-user-plus me-2"></i> Đăng ký</a></li>
-                           
-                        </ul>
+                        @if (Session["UserId"] != null)
+                        {
+                            <!-- Đã đăng nhập -->
+                            <button class="user-menu-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fa fa-user-circle"></i> @Session["UserName"]
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <div class="dropdown-item-text">
+                                        <div class="fw-bold">@Session["UserName"]</div>
+                                        <small class="text-muted">@Session["UserEmail"]</small>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Profile", "Account")"><i class="fa fa-user me-2"></i> Thông tin tài khoản</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Orders", "Account")"><i class="fa fa-list-alt me-2"></i> Lịch sử đơn hàng</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")"><i class="fa fa-sign-out-alt me-2"></i> Đăng xuất</a></li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <!-- Chưa đăng nhập -->
+                            <button class="user-menu-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fa fa-user"></i> Tài khoản
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="@Url.Action("Login", "Account")"><i class="fa fa-sign-in-alt me-2"></i> Đăng nhập</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Register", "Account")"><i class="fa fa-user-plus me-2"></i> Đăng ký</a></li>
+                            </ul>
+                        }
                     </div>
                 </div>
             </div>

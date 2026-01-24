@@ -10,19 +10,40 @@ namespace apii.Services;
 /// </summary>
 public interface IAdminService
 {
+    // Dashboard
     Task<DashboardStatsDto> GetDashboardStatsAsync(string period);
     Task<List<RevenueChartDto>> GetRevenueChartAsync();
     Task<List<TopProductDto>> GetTopProductsAsync(int limit);
+    
+    // Orders
     Task<List<AdminOrderDto>> GetRecentOrdersAsync(int limit);
     Task<PagedResult<AdminOrderDto>> GetAllOrdersAsync(int page, int pageSize, string? status);
     Task<AdminOrderDetailDto?> GetOrderDetailAsync(int orderId);
+    Task<Order> CreateOrderAsync(AdminCreateOrderDto dto);
+    Task<Order?> UpdateOrderAsync(int orderId, UpdateOrderDto dto);
     Task<bool> UpdateOrderStatusAsync(int orderId, string status);
+    Task<bool> DeleteOrderAsync(int orderId);
+    
+    // Customers
     Task<List<CustomerDto>> GetAllCustomersAsync();
+    Task<CustomerDetailDto?> GetCustomerDetailAsync(int customerId);
+    Task<User> CreateCustomerAsync(CreateCustomerDto dto);
+    Task<User?> UpdateCustomerAsync(int customerId, UpdateCustomerDto dto);
+    Task<bool> DeleteCustomerAsync(int customerId);
+    
+    // Products
     Task<List<AdminProductDto>> GetAllProductsAsync();
     Task<AdminProductDto?> GetProductByIdAsync(int productId);
     Task<Product> CreateProductAsync(CreateProductDto dto);
     Task<Product?> UpdateProductAsync(int productId, UpdateProductDto dto);
     Task<bool> DeleteProductAsync(int productId);
+    
+    // Categories
+    Task<List<AdminCategoryDto>> GetAllCategoriesAsync();
+    Task<AdminCategoryDto?> GetCategoryByIdAsync(int categoryId);
+    Task<Category> CreateCategoryAsync(CreateCategoryDto dto);
+    Task<Category?> UpdateCategoryAsync(int categoryId, UpdateCategoryDto dto);
+    Task<bool> DeleteCategoryAsync(int categoryId);
 }
 
 /// <summary>
@@ -312,6 +333,209 @@ public class AdminService : IAdminService
             return false;
 
         _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    // ==================== ORDERS CRUD ====================
+    
+    public async Task<Order> CreateOrderAsync(AdminCreateOrderDto dto)
+    {
+        var order = new Order
+        {
+            UserId = dto.UserId,
+            CustomerName = dto.CustomerName,
+            CustomerEmail = dto.CustomerEmail,
+            CustomerPhone = dto.CustomerPhone,
+            ShippingAddress = dto.ShippingAddress,
+            Total = dto.Total,
+            Status = "Pending",
+            OrderDate = DateTime.Now
+        };
+
+        _context.Orders.Add(order);
+        await _context.SaveChangesAsync();
+        return order;
+    }
+
+    public async Task<Order?> UpdateOrderAsync(int orderId, UpdateOrderDto dto)
+    {
+        var order = await _context.Orders.FindAsync(orderId);
+        if (order == null)
+            return null;
+
+        order.CustomerName = dto.CustomerName;
+        order.CustomerPhone = dto.CustomerPhone;
+        order.ShippingAddress = dto.ShippingAddress;
+        order.Status = dto.Status;
+
+        await _context.SaveChangesAsync();
+        return order;
+    }
+
+    public async Task<bool> DeleteOrderAsync(int orderId)
+    {
+        var order = await _context.Orders.FindAsync(orderId);
+        if (order == null)
+            return false;
+
+        _context.Orders.Remove(order);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    // ==================== CUSTOMERS CRUD ====================
+    
+    public async Task<CustomerDetailDto?> GetCustomerDetailAsync(int customerId)
+    {
+        var customer = await _context.Users
+            .Where(u => u.Id == customerId && u.Role == "Customer")
+            .Select(u => new CustomerDetailDto
+            {
+                UserId = u.Id,
+                FullName = u.FullName,
+                Email = u.Email,
+                CreatedAt = u.CreatedDate,
+                TotalOrders = _context.Orders.Count(o => o.UserId == u.Id),
+                TotalSpent = _context.Orders
+                    .Where(o => o.UserId == u.Id && o.Status == "Delivered")
+                    .Sum(o => (decimal?)o.Total) ?? 0,
+                RecentOrders = _context.Orders
+                    .Where(o => o.UserId == u.Id)
+                    .OrderByDescending(o => o.OrderDate)
+                    .Take(5)
+                    .Select(o => new AdminOrderDto
+                    {
+                        OrderId = o.Id,
+                        UserId = o.UserId,
+                        CustomerName = o.CustomerName,
+                        TotalAmount = o.Total,
+                        Status = o.Status,
+                        CreatedAt = o.OrderDate
+                    })
+                    .ToList()
+            })
+            .FirstOrDefaultAsync();
+
+        return customer;
+    }
+
+    public async Task<User> CreateCustomerAsync(CreateCustomerDto dto)
+    {
+        var customer = new User
+        {
+            FullName = dto.FullName,
+            Email = dto.Email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+            Role = "Customer",
+            CreatedDate = DateTime.Now
+        };
+
+        _context.Users.Add(customer);
+        await _context.SaveChangesAsync();
+        return customer;
+    }
+
+    public async Task<User?> UpdateCustomerAsync(int customerId, UpdateCustomerDto dto)
+    {
+        var customer = await _context.Users.FindAsync(customerId);
+        if (customer == null || customer.Role != "Customer")
+            return null;
+
+        customer.FullName = dto.FullName;
+        customer.Email = dto.Email;
+        
+        if (!string.IsNullOrEmpty(dto.Password))
+        {
+            customer.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+        }
+
+        await _context.SaveChangesAsync();
+        return customer;
+    }
+
+    public async Task<bool> DeleteCustomerAsync(int customerId)
+    {
+        var customer = await _context.Users.FindAsync(customerId);
+        if (customer == null || customer.Role != "Customer")
+            return false;
+
+        _context.Users.Remove(customer);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    // ==================== CATEGORIES CRUD ====================
+    
+    public async Task<List<AdminCategoryDto>> GetAllCategoriesAsync()
+    {
+        var categories = await _context.Categories
+            .Select(c => new AdminCategoryDto
+            {
+                CategoryId = c.Id,
+                Name = c.Name,
+                Description = "",
+                ProductCount = _context.Products.Count(p => p.CategoryId == c.Id)
+            })
+            .ToListAsync();
+
+        return categories;
+    }
+
+    public async Task<AdminCategoryDto?> GetCategoryByIdAsync(int categoryId)
+    {
+        var category = await _context.Categories
+            .Where(c => c.Id == categoryId)
+            .Select(c => new AdminCategoryDto
+            {
+                CategoryId = c.Id,
+                Name = c.Name,
+                Description = "",
+                ProductCount = _context.Products.Count(p => p.CategoryId == c.Id)
+            })
+            .FirstOrDefaultAsync();
+
+        return category;
+    }
+
+    public async Task<Category> CreateCategoryAsync(CreateCategoryDto dto)
+    {
+        var category = new Category
+        {
+            Name = dto.Name,
+            Slug = dto.Name.ToLower().Replace(" ", "-")
+        };
+
+        _context.Categories.Add(category);
+        await _context.SaveChangesAsync();
+        return category;
+    }
+
+    public async Task<Category?> UpdateCategoryAsync(int categoryId, UpdateCategoryDto dto)
+    {
+        var category = await _context.Categories.FindAsync(categoryId);
+        if (category == null)
+            return null;
+
+        category.Name = dto.Name;
+        category.Slug = dto.Name.ToLower().Replace(" ", "-");
+
+        await _context.SaveChangesAsync();
+        return category;
+    }
+
+    public async Task<bool> DeleteCategoryAsync(int categoryId)
+    {
+        var category = await _context.Categories.FindAsync(categoryId);
+        if (category == null)
+            return false;
+
+        // Check if category has products
+        var hasProducts = await _context.Products.AnyAsync(p => p.CategoryId == categoryId);
+        if (hasProducts)
+            return false;
+
+        _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
         return true;
     }

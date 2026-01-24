@@ -112,3 +112,70 @@ public class PagedResult<T>
     public int PageSize { get; set; }
     public int TotalPages => (int)Math.Ceiling((double)TotalItems / PageSize);
 }
+
+// ==================== ORDER DTOs ====================
+
+public class AdminCreateOrderDto
+{
+    public int? UserId { get; set; }
+    public string CustomerName { get; set; } = string.Empty;
+    public string? CustomerEmail { get; set; }
+    public string CustomerPhone { get; set; } = string.Empty;
+    public string ShippingAddress { get; set; } = string.Empty;
+    public decimal Total { get; set; }
+}
+
+public class UpdateOrderDto
+{
+    public string CustomerName { get; set; } = string.Empty;
+    public string CustomerPhone { get; set; } = string.Empty;
+    public string ShippingAddress { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
+}
+
+// ==================== CUSTOMER DTOs ====================
+
+public class CustomerDetailDto
+{
+    public int UserId { get; set; }
+    public string FullName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+    public int TotalOrders { get; set; }
+    public decimal TotalSpent { get; set; }
+    public List<AdminOrderDto> RecentOrders { get; set; } = new();
+}
+
+public class CreateCustomerDto
+{
+    public string FullName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+}
+
+public class UpdateCustomerDto
+{
+    public string FullName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string? Password { get; set; }
+}
+
+// ==================== CATEGORY DTOs ====================
+
+public class AdminCategoryDto
+{
+    public int CategoryId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty; // Optional field for display
+    public int ProductCount { get; set; }
+}
+
+public class CreateCategoryDto
+{
+    public string Name { get; set; } = string.Empty;
+}
+
+public class UpdateCategoryDto
+{
+    public string Name { get; set; } = string.Empty;
+}

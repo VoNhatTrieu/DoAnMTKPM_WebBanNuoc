@@ -1,10 +1,6 @@
 D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\appsettings.Development.json
 D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\appsettings.json
 D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.exe
-D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.deps.json
-D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.runtimeconfig.json
-D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.dll
-D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.pdb
 D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\Azure.Core.dll
 D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\Azure.Identity.dll
 D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\BCrypt.Net-Next.dll
@@ -135,5 +131,9 @@ D:\DoAnMTKPM_WebBanNuoc\apii\obj\Debug\net8.0\apii.csproj.CopyComplete
 D:\DoAnMTKPM_WebBanNuoc\apii\obj\Debug\net8.0\apii.dll
 D:\DoAnMTKPM_WebBanNuoc\apii\obj\Debug\net8.0\refint\apii.dll
 D:\DoAnMTKPM_WebBanNuoc\apii\obj\Debug\net8.0\apii.pdb
+D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.deps.json
+D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.runtimeconfig.json
+D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.dll
+D:\DoAnMTKPM_WebBanNuoc\apii\bin\Debug\net8.0\apii.pdb
 D:\DoAnMTKPM_WebBanNuoc\apii\obj\Debug\net8.0\apii.genruntimeconfig.cache
 D:\DoAnMTKPM_WebBanNuoc\apii\obj\Debug\net8.0\ref\apii.dll

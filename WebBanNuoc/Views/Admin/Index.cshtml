@@ -1,0 +1,296 @@
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        margin-bottom: 25px;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .status-completed {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .status-processing {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    @@media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-container {
+            padding: 15px;
+        }
+
+        .table-container {
+            padding: 15px;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard - Tổng quan</h1>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary active" onclick="loadStats('today')">Hôm nay</button>
+            <button type="button" class="btn btn-outline-primary" onclick="loadStats('week')">Tuần</button>
+            <button type="button" class="btn btn-outline-primary" onclick="loadStats('month')">Tháng</button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <!-- Total Orders -->
+        <div class="card stat-card border-left-primary">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Đơn hàng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalOrders">0</div>
+                        <small class="text-muted">Đang tải...</small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat-icon bg-primary text-white">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue -->
+        <div class="card stat-card border-left-success">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Doanh thu</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalRevenue">0 ₫</div>
+                        <small class="text-muted">Đang tải...</small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat-icon bg-success text-white">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Customers -->
+        <div class="card stat-card border-left-info">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Khách hàng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalCustomers">0</div>
+                        <small class="text-muted" id="newCustomers">Đang tải...</small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat-icon bg-info text-white">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Products -->
+        <div class="card stat-card border-left-warning">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Sản phẩm</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalProducts">0</div>
+                        <small class="text-muted">Đang tải...</small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat-icon bg-warning text-white">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row">
+        <!-- Revenue Chart -->
+        <div class="col-xl-8 col-lg-7 mb-4">
+            <div class="chart-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="m-0 font-weight-bold text-primary">Doanh thu 7 ngày qua</h5>
+                    <i class="fas fa-chart-area text-primary"></i>
+                </div>
+                <canvas id="revenueChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Products Chart -->
+        <div class="col-xl-4 col-lg-5 mb-4">
+            <div class="chart-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="m-0 font-weight-bold text-primary">Top 5 sản phẩm</h5>
+                    <i class="fas fa-chart-pie text-primary"></i>
+                </div>
+                <canvas id="topProductsChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders & Best Sellers -->
+    <div class="row">
+        <!-- Recent Orders -->
+        <div class="col-xl-8 col-lg-7 mb-4">
+            <div class="table-container">
+                <h5 class="m-0 font-weight-bold text-primary mb-3">Đơn hàng gần đây</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Sản phẩm</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrdersTable">
+                            <!-- Data will be loaded from API by admin-dashboard-realtime.js -->
+                            <tr>
+                                <td colspan="6" class="text-center py-3">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                        <span class="visually-hidden">Đang tải...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Best Sellers -->
+        <div class="col-xl-4 col-lg-5 mb-4">
+            <div class="table-container">
+                <h5 class="m-0 font-weight-bold text-primary mb-3">Sản phẩm bán chạy</h5>
+                <div class="list-group list-group-flush" id="bestSellersList">
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-chart-line fa-3x mb-3"></i>
+                        <p>Chưa có dữ liệu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['18/01', '19/01', '20/01', '21/01', '22/01', '23/01', '24/01'],
+                datasets: [{
+                    label: 'Doanh thu (triệu đồng)',
+                    data: [32, 28, 35, 42, 38, 45, 48],
+                    borderColor: '#4e73df',
+                    backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Top Products Chart
+        const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+        const topProductsChart = new Chart(topProductsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Trà sữa', 'Trà trái cây', 'Cà phê', 'Sinh tố', 'Nước ép'],
+                datasets: [{
+                    data: [234, 198, 156, 142, 128],
+                    backgroundColor: [
+                        '#4e73df',
+                        '#1cc88a',
+                        '#36b9cc',
+                        '#f6c23e',
+                        '#e74a3b'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Load stats function removed - now in admin-dashboard-realtime.js
+    </script>
+    
+    <!-- Load realtime dashboard data -->
+    <script src="~/Scripts/admin-dashboard-realtime.js"></script>
+}

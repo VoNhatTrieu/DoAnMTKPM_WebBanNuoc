@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Admin Dashboard</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 80px;
+            --topbar-height: 60px;
+            --primary-color: #4e73df;
+            --secondary-color: #858796;
+            --success-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fc;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #4e73df 0%, #224abe 100%);
+            padding-top: 20px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-brand i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+
+        .sidebar.collapsed .sidebar-brand span {
+            display: none;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid white;
+        }
+
+        .sidebar-menu a i {
+            min-width: 40px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar.collapsed .sidebar-menu a span {
+            display: none;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        /* Topbar Styles */
+        .topbar {
+            height: var(--topbar-height);
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .menu-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+            border: none;
+            margin-top: 10px;
+        }
+        
+        .dropdown-item {
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+        
+        .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            padding: 30px;
+        }
+
+        /* Card Styles */
+        .stat-card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 25px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.25);
+        }
+
+        .stat-card .card-body {
+            padding: 20px;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        /* Responsive Styles */
+        @@media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-wrapper {
+                padding: 15px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .user-info span {
+                display: none;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .stat-card .card-body {
+                padding: 15px;
+            }
+
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .mobile-overlay.show {
+            display: block;
+        }
+
+        /* Scrollbar Styles */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <a href="@Url.Action("Index", "Admin")" class="sidebar-brand">
+            <i class="fas fa-store"></i>
+            <span>Admin Panel</span>
+        </a>
+
+        <ul class="sidebar-menu">
+            <li>
+                <a href="@Url.Action("Index", "Admin")" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Products", "Admin")" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Products" ? "active" : "")">
+                    <i class="fas fa-box"></i>
+                    <span>Sản phẩm</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Categories", "Admin")" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Categories" ? "active" : "")">
+                    <i class="fas fa-list"></i>
+                    <span>Danh mục</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Orders", "Admin")" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Orders" ? "active" : "")">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Đơn hàng</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Customers", "Admin")" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Customers" ? "active" : "")">
+                    <i class="fas fa-users"></i>
+                    <span>Khách hàng</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Reports", "Admin")" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Reports" ? "active" : "")">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Báo cáo</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Home")">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Về trang chủ</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h5 class="mb-0 d-none d-md-block">@ViewBag.Title</h5>
+            </div>
+            <div class="topbar-right">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        @if (!string.IsNullOrEmpty(ViewBag.UserName as string))
+                        {
+                            @ViewBag.UserName.ToString().Substring(0, 1).ToUpper()
+                        }
+                        else
+                        {
+                            @("A")
+                        }
+                    </div>
+                    <span class="d-none d-sm-inline">
+                        @(ViewBag.UserName ?? "Admin")
+                    </span>
+                    <div class="dropdown d-inline-block ms-2">
+                        <button class="btn btn-link dropdown-toggle text-decoration-none" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="@Url.Action("Profile", "Account")"><i class="fas fa-user"></i> Hồ sơ</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i> Về trang chủ</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Admin API Helper -->
+    <script src="~/Scripts/admin-api.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Toggle Sidebar
+            $('#menuToggle').click(function() {
+                if ($(window).width() > 768) {
+                    $('#sidebar').toggleClass('collapsed');
+                } else {
+                    $('#sidebar').toggleClass('show');
+                    $('#mobileOverlay').toggleClass('show');
+                }
+            });
+
+            // Close sidebar when clicking overlay
+            $('#mobileOverlay').click(function() {
+                $('#sidebar').removeClass('show');
+                $(this).removeClass('show');
+            });
+
+            // Handle window resize
+            $(window).resize(function() {
+                if ($(window).width() > 768) {
+                    $('#sidebar').removeClass('show');
+                    $('#mobileOverlay').removeClass('show');
+                }
+            });
+        });
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

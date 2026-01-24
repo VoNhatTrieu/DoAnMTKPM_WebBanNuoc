@@ -11,7 +11,7 @@ namespace WebBanNuoc.Controllers
 {
     /// <summary>
     /// Products Controller
-    /// Sử dụng Local Service với dữ liệu tĩnh
+    /// View sử dụng JavaScript API để load dữ liệu từ apii backend
     /// </summary>
     public class ProductsController : Controller
     {
@@ -23,27 +23,15 @@ namespace WebBanNuoc.Controllers
             _productService = new LocalProductService(pricingStrategy);
         }
 
-        // GET: Products
+        // GET: Products - View sẽ load data từ API qua JavaScript
         public ActionResult Index(string category = "", string sort = "")
         {
-            IEnumerable<Models.DTOs.ProductDTO> products;
-
-            if (!string.IsNullOrEmpty(category))
-            {
-                products = _productService.GetProductsByCategory(category);
-            }
-            else
-            {
-                products = _productService.GetAvailableProducts();
-            }
-
             ViewBag.Category = category;
             ViewBag.Sort = sort;
-            ViewBag.Products = products;
             return View();
         }
 
-        // Trang chi tiết sản phẩm
+        // Trang chi tiết sản phẩm - Vẫn dùng LocalProductService cho đến khi migrate sang API
         public ActionResult ProductDetail(int id)
         {
             var product = _productService.GetProductById(id);
@@ -59,11 +47,9 @@ namespace WebBanNuoc.Controllers
 
         public ActionResult Search(string category, string sort, string keyword)
         {
-            var products = _productService.SearchProducts(keyword);
             ViewBag.Keyword = keyword;
             ViewBag.Category = category;
             ViewBag.Sort = sort;
-            ViewBag.Products = products;
             return View("Index");
         }
     }

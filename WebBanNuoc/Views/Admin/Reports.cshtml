@@ -1,0 +1,206 @@
+@{
+    ViewBag.Title = "Báo cáo & Thống kê";
+}
+
+<style>
+    .report-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        margin-bottom: 25px;
+    }
+
+    .report-filters {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        padding: 25px;
+        color: white;
+        margin-bottom: 25px;
+    }
+
+    .metric-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        transition: transform 0.3s;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #4e73df;
+    }
+
+    .metric-label {
+        color: #858796;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+
+    .top-product-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background: #f8f9fc;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .rank-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+
+    .rank-1 { background: #ffd700; color: #333; }
+    .rank-2 { background: #c0c0c0; color: #333; }
+    .rank-3 { background: #cd7f32; color: white; }
+    .rank-default { background: #e3e6f0; color: #858796; }
+
+    @@media (max-width: 768px) {
+        .report-card {
+            padding: 15px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+        }
+
+        .chart-container canvas {
+            max-height: 250px !important;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Báo cáo & Thống kê</h1>
+        <div>
+            <button class="btn btn-primary" onclick="exportReport()">
+                <i class="fas fa-file-pdf"></i> Xuất PDF
+            </button>
+            <button class="btn btn-outline-primary" onclick="exportExcel()">
+                <i class="fas fa-file-excel"></i> Xuất Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="report-filters">
+        <div class="row align-items-center g-3">
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Từ ngày</label>
+                <input type="date" class="form-control" id="reportFromDate">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Đến ngày</label>
+                <input type="date" class="form-control" id="reportToDate">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Nhanh chọn</label>
+                <select class="form-select" id="quickSelect" onchange="quickDateSelect(this.value)">
+                    <option value="">Tùy chọn</option>
+                    <option value="today">Hôm nay</option>
+                    <option value="yesterday">Hôm qua</option>
+                    <option value="week">7 ngày qua</option>
+                    <option value="month">30 ngày qua</option>
+                    <option value="year">Năm nay</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-light w-100" onclick="loadReport()">
+                    <i class="fas fa-search"></i> Xem báo cáo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="report-card text-center py-5">
+                <i class="fas fa-chart-bar fa-4x text-muted mb-4"></i>
+                <h4 class="text-muted">Tính năng báo cáo & thống kê đang được phát triển</h4>
+                <p class="text-muted">Các API endpoints cần thiết:</p>
+                <ul class="list-unstyled text-muted">
+                    <li><code>GET /api/admin/reports/revenue</code> - Doanh thu theo thời gian</li>
+                    <li><code>GET /api/admin/reports/products</code> - Sản phẩm bán chạy</li>
+                    <li><code>GET /api/admin/reports/customers</code> - Phân tích khách hàng</li>
+                    <li><code>GET /api/admin/reports/categories</code> - Doanh thu theo danh mục</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function quickDateSelect(value) {
+            const today = new Date();
+            let fromDate, toDate;
+
+            switch(value) {
+                case 'today':
+                    fromDate = toDate = today;
+                    break;
+                case 'yesterday':
+                    fromDate = toDate = new Date(today.setDate(today.getDate() - 1));
+                    break;
+                case 'week':
+                    fromDate = new Date(today.setDate(today.getDate() - 7));
+                    toDate = new Date();
+                    break;
+                case 'month':
+                    fromDate = new Date(today.setDate(today.getDate() - 30));
+                    toDate = new Date();
+                    break;
+                case 'year':
+                    fromDate = new Date(today.getFullYear(), 0, 1);
+                    toDate = new Date();
+                    break;
+            }
+
+            if (fromDate) {
+                $('#reportFromDate').val(fromDate.toISOString().split('T')[0]);
+                $('#reportToDate').val(toDate.toISOString().split('T')[0]);
+            }
+        }
+
+        function loadReport() {
+            const fromDate = $('#reportFromDate').val();
+            const toDate = $('#reportToDate').val();
+            console.log('Loading report:', { fromDate, toDate });
+            // Implement AJAX call to load report data when API is ready
+        }
+
+        function exportReport() {
+            alert('Tính năng xuất PDF đang được phát triển');
+        }
+
+        function exportExcel() {
+            alert('Tính năng xuất Excel đang được phát triển');
+        }
+
+        // Set default dates
+        $(document).ready(function() {
+            const today = new Date();
+            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            $('#reportFromDate').val(weekAgo.toISOString().split('T')[0]);
+            $('#reportToDate').val(today.toISOString().split('T')[0]);
+        });
+    </script>
+}

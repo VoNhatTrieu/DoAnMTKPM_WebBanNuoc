@@ -1,0 +1,155 @@
+@{
+    ViewBag.Title = "Quản lý Khách hàng";
+
+}
+
+<style>
+    .customers-filters {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        margin-bottom: 25px;
+    }
+
+    .customers-table-container {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
+    .customer-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .customer-status {
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-active { background: #d1e7dd; color: #0f5132; }
+    .status-inactive { background: #f8d7da; color: #842029; }
+    .status-blocked { background: #495057; color: white; }
+
+    .purchase-history-item {
+        border-left: 3px solid #4e73df;
+        padding: 10px;
+        margin-bottom: 10px;
+        background: #f8f9fc;
+        border-radius: 5px;
+    }
+
+    @@media (max-width: 768px) {
+        .customers-table-container {
+            padding: 15px;
+        }
+
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Quản lý Khách hàng</h1>
+        <button class="btn btn-outline-primary" onclick="exportCustomers()">
+            <i class="fas fa-download"></i> Xuất Excel
+        </button>
+    </div>
+
+    <!-- Stats Cards - Data from API -->
+    <div class="row mb-4" id="customerStatsCards">
+        <div class="col-12 text-center py-3">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="customers-filters">
+        <div class="row g-3">
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label">Trạng thái</label>
+                <select class="form-select" id="filterStatus">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
+                    <option value="blocked">Bị khóa</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label">Sắp xếp theo</label>
+                <select class="form-select" id="sortBy">
+                    <option value="newest">Mới nhất</option>
+                    <option value="orders">Số đơn hàng</option>
+                    <option value="spending">Chi tiêu nhiều</option>
+                    <option value="name">Tên A-Z</option>
+                </select>
+            </div>
+            <div class="col-md-4 col-sm-8">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" class="form-control" id="searchCustomer" placeholder="Tên, SĐT, Email...">
+            </div>
+            <div class="col-md-2 col-sm-4 d-flex align-items-end">
+                <button class="btn btn-primary w-100" onclick="filterCustomers()">
+                    <i class="fas fa-search"></i> Tìm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customers Table -->
+    <div class="customers-table-container">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Khách hàng</th>
+                        <th>Liên hệ</th>
+                        <th>Ngày đăng ký</th>
+                        <th>Số đơn</th>
+                        <th>Tổng chi tiêu</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="customersTableBody">
+                    <!-- Data will be loaded from API -->
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Đang tải dữ liệu khách hàng...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/admin-customers.js"></script>
+}

@@ -75,7 +75,16 @@ namespace WebBanNuoc.Controllers
                     Session["Token"] = result.Data.Token;
 
                     TempData["SuccessMessage"] = result.Message; // "Đăng nhập thành công"
-                    return RedirectToAction("Index", "Home");
+                    
+                    // Redirect based on user role
+                    if (result.Data.UserInfo.Role == "Admin")
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                 {

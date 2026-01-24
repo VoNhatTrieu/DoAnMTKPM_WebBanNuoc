@@ -49,7 +49,28 @@ public class AuthService : IAuthService
             }
 
             // Verify password
-            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
+            bool isPasswordValid = false;
+            
+            try
+            {
+                // Try BCrypt verification first
+                isPasswordValid = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
+            }
+            catch
+            {
+                // If BCrypt fails, try plain text comparison (for development/testing only)
+                // This allows using plain passwords from database during development
+                isPasswordValid = user.PasswordHash == loginDto.Password;
+                
+                // If plain text matched, update to BCrypt hash for security
+                if (isPasswordValid)
+                {
+                    user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(loginDto.Password);
+                    _unitOfWork.Repository<User>().Update(user);
+                }
+            }
+            
+            if (!isPasswordValid)
             {
                 return ApiResponse<LoginResponseDto>.ErrorResponse("Email hoặc mật khẩu không đúng");
             }
@@ -68,8 +89,6 @@ public class AuthService : IAuthService
             // Create response
             var response = new LoginResponseDto
             {
-                Success = true,
-                Message = "Đăng nhập thành công",
                 Token = GenerateToken(user),
                 UserInfo = new UserInfoDto
                 {

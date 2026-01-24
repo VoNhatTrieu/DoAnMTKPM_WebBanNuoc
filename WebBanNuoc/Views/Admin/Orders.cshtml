@@ -1,0 +1,475 @@
+@{
+    ViewBag.Title = "Quản lý Đơn hàng";
+
+}
+
+<style>
+    .orders-filters {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        margin-bottom: 25px;
+    }
+
+    .orders-table-container {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
+    .order-status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-processing { background: #cfe2ff; color: #084298; }
+    .status-completed { background: #d1e7dd; color: #0f5132; }
+    .status-cancelled { background: #f8d7da; color: #842029; }
+
+    .order-detail-section {
+        background: #f8f9fc;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .order-item {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid #4e73df;
+    }
+
+    @@media (max-width: 768px) {
+        .orders-table-container {
+            padding: 15px;
+        }
+
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+
+        .btn-group-sm {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Quản lý Đơn hàng</h1>
+        <div>
+            <button class="btn btn-outline-primary" onclick="exportOrders()">
+                <i class="fas fa-download"></i> Xuất Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="orders-filters">
+        <div class="row g-3">
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label">Trạng thái</label>
+                <select class="form-select" id="filterStatus">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="pending">Chờ xử lý</option>
+                    <option value="processing">Đang xử lý</option>
+                    <option value="completed">Hoàn thành</option>
+                    <option value="cancelled">Đã hủy</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label">Từ ngày</label>
+                <input type="date" class="form-control" id="filterFromDate">
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label">Đến ngày</label>
+                <input type="date" class="form-control" id="filterToDate">
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" class="form-control" id="searchOrder" placeholder="Mã đơn, SĐT...">
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <button class="btn btn-primary" onclick="filterOrders()">
+                    <i class="fas fa-filter"></i> Lọc
+                </button>
+                <button class="btn btn-outline-secondary ms-2" onclick="resetFilters()">
+                    <i class="fas fa-redo"></i> Đặt lại
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Chờ xử lý</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Đang xử lý</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-spinner fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Hoàn thành</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">156</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Đã hủy</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">5</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-times-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="orders-table-container">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thanh toán</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>#ORD20260124001</strong><br>
+                            <small class="text-muted">3 món</small>
+                        </td>
+                        <td>
+                            <div>Nguyễn Văn A</div>
+                            <small class="text-muted">0912345678</small>
+                        </td>
+                        <td>24/01/2026<br><small class="text-muted">14:30</small></td>
+                        <td><strong>145.000 ₫</strong></td>
+                        <td><span class="order-status status-pending">Chờ xử lý</span></td>
+                        <td>
+                            <span class="badge bg-info">COD</span><br>
+                            <small class="text-muted">Chưa thanh toán</small>
+                        </td>
+                        <td>
+                            <div class="btn-group-sm">
+                                <button class="btn btn-sm btn-info mb-1" onclick="viewOrder(1)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-success mb-1" onclick="processOrder(1)">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="cancelOrder(1)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>#ORD20260124002</strong><br>
+                            <small class="text-muted">2 món</small>
+                        </td>
+                        <td>
+                            <div>Trần Thị B</div>
+                            <small class="text-muted">0987654321</small>
+                        </td>
+                        <td>24/01/2026<br><small class="text-muted">13:15</small></td>
+                        <td><strong>98.000 ₫</strong></td>
+                        <td><span class="order-status status-processing">Đang xử lý</span></td>
+                        <td>
+                            <span class="badge bg-success">Online</span><br>
+                            <small class="text-muted">Đã thanh toán</small>
+                        </td>
+                        <td>
+                            <div class="btn-group-sm">
+                                <button class="btn btn-sm btn-info mb-1" onclick="viewOrder(2)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-success mb-1" onclick="completeOrder(2)">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>#ORD20260124003</strong><br>
+                            <small class="text-muted">5 món</small>
+                        </td>
+                        <td>
+                            <div>Lê Văn C</div>
+                            <small class="text-muted">0901234567</small>
+                        </td>
+                        <td>24/01/2026<br><small class="text-muted">12:00</small></td>
+                        <td><strong>235.000 ₫</strong></td>
+                        <td><span class="order-status status-completed">Hoàn thành</span></td>
+                        <td>
+                            <span class="badge bg-success">Online</span><br>
+                            <small class="text-muted">Đã thanh toán</small>
+                        </td>
+                        <td>
+                            <div class="btn-group-sm">
+                                <button class="btn btn-sm btn-info" onclick="viewOrder(3)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-3">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Trước</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Sau</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Order Detail Modal -->
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderDetailModalLabel">Chi tiết đơn hàng #ORD20260124001</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Customer Info -->
+                <div class="order-detail-section">
+                    <h6 class="mb-3"><i class="fas fa-user"></i> Thông tin khách hàng</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Tên:</strong> Nguyễn Văn A</p>
+                            <p><strong>SĐT:</strong> 0912345678</p>
+                            <p><strong>Email:</strong> nguyenvana@email.com</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Địa chỉ:</strong> 123 Đường ABC, Quận 1, TP.HCM</p>
+                            <p><strong>Ghi chú:</strong> Giao trong giờ hành chính</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="order-detail-section">
+                    <h6 class="mb-3"><i class="fas fa-shopping-cart"></i> Chi tiết món</h6>
+                    
+                    <div class="order-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">Trà sữa trân châu đường đen</h6>
+                                <small class="text-muted">Size: M • Đường: 50% • Đá: 70%</small><br>
+                                <small class="text-muted">Topping: Trân châu đen (+5.000₫), Pudding (+5.000₫)</small>
+                            </div>
+                            <div class="text-end">
+                                <strong>52.000 ₫</strong>
+                                <div><small class="text-muted">x2</small></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">Cà phê sữa đá</h6>
+                                <small class="text-muted">Size: L • Đường: 100% • Đá: 100%</small>
+                            </div>
+                            <div class="text-end">
+                                <strong>35.000 ₫</strong>
+                                <div><small class="text-muted">x1</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Summary -->
+                <div class="order-detail-section">
+                    <h6 class="mb-3"><i class="fas fa-money-bill"></i> Thanh toán</h6>
+                    <table class="table table-borderless mb-0">
+                        <tr>
+                            <td>Tạm tính:</td>
+                            <td class="text-end">139.000 ₫</td>
+                        </tr>
+                        <tr>
+                            <td>Phí giao hàng:</td>
+                            <td class="text-end">15.000 ₫</td>
+                        </tr>
+                        <tr>
+                            <td>Giảm giá:</td>
+                            <td class="text-end text-danger">-9.000 ₫</td>
+                        </tr>
+                        <tr class="border-top">
+                            <td><strong>Tổng cộng:</strong></td>
+                            <td class="text-end"><strong class="text-primary fs-5">145.000 ₫</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <span class="badge bg-info">Thanh toán khi nhận hàng (COD)</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Order Status History -->
+                <div class="order-detail-section">
+                    <h6 class="mb-3"><i class="fas fa-history"></i> Lịch sử đơn hàng</h6>
+                    <div class="timeline">
+                        <div class="d-flex mb-2">
+                            <div class="me-3"><i class="fas fa-check-circle text-success"></i></div>
+                            <div>
+                                <strong>Đã đặt hàng</strong>
+                                <div class="text-muted small">24/01/2026 14:30</div>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <div class="me-3"><i class="fas fa-circle text-warning"></i></div>
+                            <div>
+                                <strong>Chờ xử lý</strong>
+                                <div class="text-muted small">Hiện tại</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-success" onclick="processOrder(1)">Xử lý đơn</button>
+                <button type="button" class="btn btn-danger" onclick="cancelOrder(1)">Hủy đơn</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function viewOrder(id) {
+            $('#orderDetailModal').modal('show');
+            // Load order details via AJAX
+        }
+
+        function processOrder(id) {
+            if (confirm('Xác nhận xử lý đơn hàng #' + id + '?')) {
+                // Implement process logic
+                alert('Đơn hàng đang được xử lý!');
+                location.reload();
+            }
+        }
+
+        function completeOrder(id) {
+            if (confirm('Xác nhận hoàn thành đơn hàng #' + id + '?')) {
+                // Implement complete logic
+                alert('Đơn hàng đã hoàn thành!');
+                location.reload();
+            }
+        }
+
+        function cancelOrder(id) {
+            const reason = prompt('Lý do hủy đơn:');
+            if (reason) {
+                // Implement cancel logic
+                alert('Đã hủy đơn hàng #' + id);
+                location.reload();
+            }
+        }
+
+        function filterOrders() {
+            const status = $('#filterStatus').val();
+            const fromDate = $('#filterFromDate').val();
+            const toDate = $('#filterToDate').val();
+            const search = $('#searchOrder').val();
+            
+            console.log('Filtering orders:', { status, fromDate, toDate, search });
+            // Implement filter logic with AJAX call
+        }
+
+        function resetFilters() {
+            $('#filterStatus').val('');
+            $('#filterFromDate').val('');
+            $('#filterToDate').val('');
+            $('#searchOrder').val('');
+            filterOrders();
+        }
+
+        function exportOrders() {
+            // Implement export to Excel logic
+            alert('Đang xuất file Excel...');
+        }
+
+        // Set default date range (today)
+        $(document).ready(function() {
+            const today = new Date().toISOString().split('T')[0];
+            $('#filterFromDate').val(today);
+            $('#filterToDate').val(today);
+        });
+    </script>
+}

@@ -1,0 +1,26 @@
+@{
+    ViewBag.Title = "Test Page";
+}
+
+<div class="container mt-5">
+    <div class="alert alert-success">
+        <h1>✅ Admin Controller hoạt động tốt!</h1>
+        <p>Nếu bạn nhìn thấy trang này, nghĩa là:</p>
+        <ul>
+            <li>AdminController đã được load thành công</li>
+            <li>Routing đã hoạt động đúng</li>
+            <li>Views/Admin folder đã được cấu hình đúng</li>
+            <li>_ViewStart.cshtml và Web.config đã work</li>
+        </ul>
+        
+        <hr>
+        <h3>Thông tin Session:</h3>
+        <ul>
+            <li><strong>UserName:</strong> @ViewBag.UserName</li>
+            <li><strong>UserEmail:</strong> @ViewBag.UserEmail</li>
+        </ul>
+        
+        <hr>
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-primary">Quay lại Dashboard</a>
+    </div>
+</div>

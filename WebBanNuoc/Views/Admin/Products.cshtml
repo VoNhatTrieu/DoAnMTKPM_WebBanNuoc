@@ -1,0 +1,326 @@
+@{
+    ViewBag.Title = "Quản lý Sản phẩm";
+
+}
+
+<style>
+    .product-filters {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        margin-bottom: 25px;
+    }
+
+    .products-table-container {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
+    .product-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .modal-fullscreen-md-down .modal-dialog {
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .size-topping-section {
+        background: #f8f9fc;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .topping-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: white;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    @@media (max-width: 768px) {
+        .products-table-container {
+            padding: 15px;
+        }
+
+        .product-image {
+            width: 40px;
+            height: 40px;
+        }
+
+        .btn-group-sm {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Quản lý Sản phẩm</h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Thêm sản phẩm mới
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="product-filters">
+        <div class="row g-3">
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label">Danh mục</label>
+                <select class="form-select" id="filterCategory">
+                    <option value="">Tất cả danh mục</option>
+                    <option value="tra-sua">Trà Sữa</option>
+                    <option value="tra">Trà</option>
+                    <option value="trai-cay">Trái Cây</option>
+                    <option value="ca-phe">Cà Phê</option>
+                    <option value="sinh-to">Sinh Tố</option>
+                    <option value="nuoc-ep">Nước Ép</option>
+                    <option value="soda">Soda</option>
+                    <option value="banh-ngot">Bánh Ngọt</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label">Trạng thái</label>
+                <select class="form-select" id="filterStatus">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="available">Còn bán</option>
+                    <option value="out-of-stock">Hết hàng</option>
+                    <option value="discontinued">Ngừng bán</option>
+                </select>
+            </div>
+            <div class="col-md-4 col-sm-8">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" class="form-control" id="searchProduct" placeholder="Tìm theo tên sản phẩm...">
+            </div>
+            <div class="col-md-2 col-sm-4 d-flex align-items-end">
+                <button class="btn btn-outline-primary w-100" onclick="filterProducts()">
+                    <i class="fas fa-filter"></i> Lọc
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="products-table-container">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá bán</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <!-- Data will be loaded from API -->
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Đang tải dữ liệu sản phẩm...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-3">
+            <ul class="pagination justify-content-center" id="productsPagination">
+                <!-- Pagination will be loaded dynamically -->
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-fullscreen-md-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">Thêm sản phẩm mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    
+                    <div class="row g-3">
+                        <!-- Basic Info Section -->
+                        <div class="col-md-6">
+                            <h6 class="border-bottom pb-2 mb-3">Thông tin cơ bản</h6>
+                            
+                            <div class="mb-3">
+                                <label for="productName" class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="productName" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="productCategory" class="form-label">Danh mục <span class="text-danger">*</span></label>
+                                <select class="form-select" id="productCategory" required>
+                                    <option value="">-- Chọn danh mục --</option>
+                                    <option value="tra-sua">🧋 Trà Sữa</option>
+                                    <option value="tra">🍵 Trà</option>
+                                    <option value="trai-cay">🍓 Trái Cây</option>
+                                    <option value="ca-phe">☕ Cà Phê</option>
+                                    <option value="sinh-to">🥤 Sinh Tố</option>
+                                    <option value="nuoc-ep">🧃 Nước Ép</option>
+                                    <option value="soda">🥂 Soda</option>
+                                    <option value="banh-ngot">🍰 Bánh Ngọt</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="productDescription" class="form-label">Mô tả sản phẩm</label>
+                                <textarea class="form-control" id="productDescription" rows="3"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="productStatus" class="form-label">Trạng thái</label>
+                                <select class="form-select" id="productStatus">
+                                    <option value="available">Còn bán</option>
+                                    <option value="out-of-stock">Hết hàng</option>
+                                    <option value="discontinued">Ngừng bán</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="productImage" class="form-label">Hình ảnh</label>
+                                <input type="file" class="form-control" id="productImage" accept="image/*">
+                                <small class="text-muted">Chọn file ảnh từ máy tính (JPG, PNG, GIF)</small>
+                                <div id="imagePreview" class="mt-2"></div>
+                            </div>
+                        </div>
+
+                        <!-- Price & Configuration Section -->
+                        <div class="col-md-6">
+                            <h6 class="border-bottom pb-2 mb-3">Cấu hình giá</h6>
+                            
+                            <!-- Size Configuration -->
+                            <div class="size-topping-section">
+                                <h6 class="mb-3">Size & Giá</h6>
+                                
+                                <div class="row mb-2">
+                                    <div class="col-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="sizeS" checked>
+                                            <label class="form-check-label" for="sizeS">Size S</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="number" class="form-control" id="priceS" placeholder="Giá (VNĐ)" value="35000">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="sizeM" checked>
+                                            <label class="form-check-label" for="sizeM">Size M</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="number" class="form-control" id="priceM" placeholder="Giá (VNĐ)" value="42000">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="sizeL" checked>
+                                            <label class="form-check-label" for="sizeL">Size L</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="number" class="form-control" id="priceL" placeholder="Giá (VNĐ)" value="49000">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Topping Configuration -->
+                            <div class="size-topping-section">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="mb-0">Topping</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTopping()">
+                                        <i class="fas fa-plus"></i> Thêm
+                                    </button>
+                                </div>
+                                
+                                <div id="toppingList">
+                                    <div class="topping-item">
+                                        <input type="checkbox" class="form-check-input" checked>
+                                        <input type="text" class="form-control form-control-sm" placeholder="Tên topping" value="Trân châu đen">
+                                        <input type="number" class="form-control form-control-sm" placeholder="Giá" value="5000">
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.remove()">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="topping-item">
+                                        <input type="checkbox" class="form-check-input" checked>
+                                        <input type="text" class="form-control form-control-sm" placeholder="Tên topping" value="Pudding">
+                                        <input type="number" class="form-control form-control-sm" placeholder="Giá" value="5000">
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.remove()">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="topping-item">
+                                        <input type="checkbox" class="form-check-input" checked>
+                                        <input type="text" class="form-control form-control-sm" placeholder="Tên topping" value="Kem cheese">
+                                        <input type="number" class="form-control form-control-sm" placeholder="Giá" value="8000">
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.remove()">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ice & Sugar Configuration -->
+                            <div class="size-topping-section">
+                                <h6 class="mb-3">Cấu hình đá & đường</h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">Đá (%)</label>
+                                        <select class="form-select form-select-sm">
+                                            <option>0% - 100%</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Đường (%)</label>
+                                        <select class="form-select form-select-sm">
+                                            <option>0% - 100%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="saveProduct()">Lưu sản phẩm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/admin-products.js"></script>
+}

@@ -26,6 +26,8 @@ namespace apii
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<SeedDataService>();
 
             // Add Controllers
             builder.Services.AddControllers();
@@ -69,7 +71,7 @@ namespace apii
                 c.RoutePrefix = string.Empty; // Swagger UI at root
             });
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection(); // Tắt HTTPS redirect cho development
 
             // Use CORS
             app.UseCors("AllowAll");

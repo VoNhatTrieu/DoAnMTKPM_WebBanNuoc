@@ -1,0 +1,353 @@
+@{
+    ViewBag.Title = "Quản lý Danh mục";
+
+}
+
+<style>
+    .categories-container {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
+    .category-card {
+        border: 2px solid #e3e6f0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+        cursor: move;
+    }
+
+    .category-card:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        transform: translateY(-3px);
+    }
+
+    .category-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-right: 15px;
+    }
+
+    .drag-handle {
+        cursor: move;
+        color: #858796;
+    }
+
+    @@media (max-width: 768px) {
+        .categories-container {
+            padding: 15px;
+        }
+
+        .category-card {
+            padding: 15px;
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Quản lý Danh mục</h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Thêm danh mục
+        </button>
+    </div>
+
+    <!-- Categories List -->
+    <div class="categories-container">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Kéo thả để sắp xếp thứ tự hiển thị danh mục
+        </div>
+
+        <div id="categoriesList">
+            <!-- Data will be loaded from API -->
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Đang tải...</span>
+                </div>
+                <p class="mt-3 text-muted">Tính năng quản lý danh mục đang được phát triển</p>
+                <p class="text-muted small">API endpoint: /api/admin/categories (coming soon)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                    </div>
+                    <div class="col-auto">
+                        <div class="category-icon bg-primary text-white">🧋</div>
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-1">Trà Sữa</h5>
+                        <p class="mb-0 text-muted">Slug: tra-sua • 12 sản phẩm</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cat1" checked>
+                            <label class="form-check-label" for="cat1">Hiển thị</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning" onclick="editCategory(1)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCategory(1)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trà -->
+            <div class="category-card" draggable="true">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                    </div>
+                    <div class="col-auto">
+                        <div class="category-icon bg-success text-white">🍵</div>
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-1">Trà</h5>
+                        <p class="mb-0 text-muted">Slug: tra • 8 sản phẩm</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cat2" checked>
+                            <label class="form-check-label" for="cat2">Hiển thị</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning" onclick="editCategory(2)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCategory(2)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trái Cây -->
+            <div class="category-card" draggable="true">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                    </div>
+                    <div class="col-auto">
+                        <div class="category-icon bg-info text-white">🍓</div>
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-1">Trái Cây</h5>
+                        <p class="mb-0 text-muted">Slug: trai-cay • 10 sản phẩm</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cat3" checked>
+                            <label class="form-check-label" for="cat3">Hiển thị</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning" onclick="editCategory(3)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCategory(3)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cà Phê -->
+            <div class="category-card" draggable="true">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                    </div>
+                    <div class="col-auto">
+                        <div class="category-icon bg-warning text-white">☕</div>
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-1">Cà Phê</h5>
+                        <p class="mb-0 text-muted">Slug: ca-phe • 6 sản phẩm</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cat4" checked>
+                            <label class="form-check-label" for="cat4">Hiển thị</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning" onclick="editCategory(4)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCategory(4)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sinh Tố -->
+            <div class="category-card" draggable="true">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                    </div>
+                    <div class="col-auto">
+                        <div class="category-icon bg-danger text-white">🥤</div>
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-1">Sinh Tố</h5>
+                        <p class="mb-0 text-muted">Slug: sinh-to • 7 sản phẩm</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cat5" checked>
+                            <label class="form-check-label" for="cat5">Hiển thị</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning" onclick="editCategory(5)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCategory(5)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nước Ép -->
+            <div class="category-card" draggable="true">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                    </div>
+                    <div class="col-auto">
+                        <div class="category-icon" style="background: #17a2b8; color: white;">🧃</div>
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-1">Nước Ép</h5>
+                        <p class="mb-0 text-muted">Slug: nuoc-ep • 5 sản phẩm</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cat6" checked>
+                            <label class="form-check-label" for="cat6">Hiển thị</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning" onclick="editCategory(6)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCategory(6)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soda -->
+            <div class="category-card" draggable="true">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                    </div>
+                    <div class="col-auto">
+                        <div class="category-icon" style="background: #6f42c1; color: white;">🥂</div>
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-1">Soda</h5>
+                        <p class="mb-0 text-muted">Slug: soda • 4 sản phẩm</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cat7" checked>
+                            <label class="form-check-label" for="cat7">Hiển thị</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning" onclick="editCategory(7)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCategory(7)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bánh Ngọt -->
+            <div class="category-card" draggable="true">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                    </div>
+                    <div class="col-auto">
+                        <div class="category-icon" style="background: #fd7e14; color: white;">🍰</div>
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-1">Bánh Ngọt</h5>
+                        <p class="mb-0 text-muted">Slug: banh-ngot • 9 sản phẩm</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cat8" checked>
+                            <label class="form-check-label" for="cat8">Hiển thị</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning" onclick="editCategory(8)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCategory(8)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // Category management will be implemented later
+        console.log('Categories page loaded');
+    </script>
+}

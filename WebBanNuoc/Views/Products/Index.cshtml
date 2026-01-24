@@ -13,7 +13,8 @@
     switch (category.ToLower())
     {
         case "tra-sua": categoryTitle = "Trà Sữa"; break;
-        case "tra-trai-cay": categoryTitle = "Trà Trái Cây"; break;
+        case "tra": categoryTitle = "Trà"; break;
+        case "trai-cay": categoryTitle = "Trái Cây"; break;
         case "ca-phe": categoryTitle = "Cà Phê"; break;
         case "sinh-to": categoryTitle = "Sinh Tố"; break;
         case "nuoc-ep": categoryTitle = "Nước Ép"; break;
@@ -47,27 +48,31 @@
                     </a>
                     <a href="@Url.Action("Index", "Products", new { category = "tra-sua" })"
                        class="list-group-item list-group-item-action @(category == "tra-sua" ? "active" : "")">
-                        Trà Sữa
+                        🧋 Trà Sữa
                     </a>
-                    <a href="@Url.Action("Index", "Products", new { category = "tra-trai-cay" })"
-                       class="list-group-item list-group-item-action @(category == "tra-trai-cay" ? "active" : "")">
-                        Trà Trái Cây
+                    <a href="@Url.Action("Index", "Products", new { category = "tra" })"
+                       class="list-group-item list-group-item-action @(category == "tra" ? "active" : "")">
+                        🍵 Trà
                     </a>
-                    <a href="@Url.Action("Index", "Products", new { category = "ca-phe" })"
-                       class="list-group-item list-group-item-action @(category == "ca-phe" ? "active" : "")">
-                        Cà Phê
+                    <a href="@Url.Action("Index", "Products", new { category = "trai-cay" })"
+                       class="list-group-item list-group-item-action @(category == "trai-cay" ? "active" : "")">
+                        ☕ Cà Phê
                     </a>
                     <a href="@Url.Action("Index", "Products", new { category = "sinh-to" })"
                        class="list-group-item list-group-item-action @(category == "sinh-to" ? "active" : "")">
-                        Sinh Tố
+                        🥤 Sinh Tố
                     </a>
                     <a href="@Url.Action("Index", "Products", new { category = "nuoc-ep" })"
                        class="list-group-item list-group-item-action @(category == "nuoc-ep" ? "active" : "")">
-                        Nước Ép
+                        🍹 Nước Ép
                     </a>
                     <a href="@Url.Action("Index", "Products", new { category = "soda" })"
                        class="list-group-item list-group-item-action @(category == "soda" ? "active" : "")">
-                        Soda
+                        🥂 Soda
+                    </a>
+                    <a href="@Url.Action("Index", "Products", new { category = "banh-ngot" })"
+                       class="list-group-item list-group-item-action @(category == "banh-ngot" ? "active" : "")">
+                        🍰 Soda
                     </a>
                     <a href="@Url.Action("Index", "Products", new { category = "banh-ngot" })"
                        class="list-group-item list-group-item-action @(category == "banh-ngot" ? "active" : "")">
@@ -113,8 +118,14 @@
             </div>
 
             <!-- Products Grid -->
-            <div class="row g-4" id="productsGrid">
-                <!-- Products will be loaded here by JavaScript -->
+            <div class="row g-4" id="productsContainer" data-category="@category">
+                <!-- Products will be loaded here by JavaScript from API -->
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang tải sản phẩm...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Đang tải danh sách sản phẩm...</p>
+                </div>
             </div>
 
             <!-- Pagination -->
@@ -294,217 +305,5 @@
 }
 
 @section scripts {
-    <script>
-        // Sample products database
-        const allProducts = [
-            // Trà Sữa
-            { id: 1, name: "Trà Sữa Trân Châu Đường Đen", category: "tra-sua", price: 45000, image: "https://via.placeholder.com/300x300?text=Tra+Sua+Tran+Chau", description: "Trà sữa thơm ngon với trân châu đường đen dai mềm", popular: true },
-            { id: 2, name: "Trà Sữa Ô Long", category: "tra-sua", price: 40000, image: "https://via.placeholder.com/300x300?text=Tra+Sua+Olong", description: "Vị trà ô long đặc trưng hòa quyện cùng sữa" },
-            { id: 3, name: "Trà Sữa Matcha", category: "tra-sua", price: 48000, image: "https://via.placeholder.com/300x300?text=Tra+Sua+Matcha", description: "Matcha thơm béo kết hợp hoàn hảo với sữa tươi", popular: true },
-            { id: 4, name: "Trà Sữa Khoai Môn", category: "tra-sua", price: 45000, image: "https://via.placeholder.com/300x300?text=Tra+Sua+Khoai+Mon", description: "Hương vị khoai môn béo ngậy độc đáo" },
-            { id: 5, name: "Trà Sữa Chocolate", category: "tra-sua", price: 42000, image: "https://via.placeholder.com/300x300?text=Tra+Sua+Chocolate", description: "Sô cô la đậm đà hòa quyện cùng trà sữa" },
-
-            // Trà Trái Cây
-            { id: 6, name: "Trà Đào Cam Sả", category: "tra-trai-cay", price: 38000, image: "https://via.placeholder.com/300x300?text=Tra+Dao+Cam+Sa", description: "Vị đào ngọt, cam chua, sả thơm", popular: true },
-            { id: 7, name: "Trà Vải", category: "tra-trai-cay", price: 35000, image: "https://via.placeholder.com/300x300?text=Tra+Vai", description: "Trà vải tươi mát, ngọt thanh" },
-            { id: 8, name: "Trà Chanh Leo", category: "tra-trai-cay", price: 32000, image: "https://via.placeholder.com/300x300?text=Tra+Chanh+Leo", description: "Chua ngọt hài hòa của chanh leo" },
-            { id: 9, name: "Trà Dâu", category: "tra-trai-cay", price: 36000, image: "https://via.placeholder.com/300x300?text=Tra+Dau", description: "Hương dâu tây tươi mát, ngọt dịu" },
-            { id: 10, name: "Trà Xoài", category: "tra-trai-cay", price: 38000, image: "https://via.placeholder.com/300x300?text=Tra+Xoai", description: "Xoài chín mọng hòa quyện trà thơm" },
-
-            // Cà Phê
-            { id: 11, name: "Cà Phê Đen Đá", category: "ca-phe", price: 25000, image: "https://via.placeholder.com/300x300?text=Ca+Phe+Den", description: "Cà phê đen truyền thống đậm đà" },
-            { id: 12, name: "Cà Phê Sữa", category: "ca-phe", price: 28000, image: "https://via.placeholder.com/300x300?text=Ca+Phe+Sua", description: "Cà phê sữa đá đậm vị", popular: true },
-            { id: 13, name: "Bạc Xỉu", category: "ca-phe", price: 30000, image: "https://via.placeholder.com/300x300?text=Bac+Xiu", description: "Cà phê sữa nhẹ, ngọt dịu" },
-            { id: 14, name: "Cappuccino", category: "ca-phe", price: 42000, image: "https://via.placeholder.com/300x300?text=Cappuccino", description: "Cappuccino Ý truyền thống" },
-            { id: 15, name: "Latte", category: "ca-phe", price: 45000, image: "https://via.placeholder.com/300x300?text=Latte", description: "Latte mềm mại, bọt sữa mịn" },
-
-            // Sinh Tố
-            { id: 16, name: "Sinh Tố Bơ", category: "sinh-to", price: 38000, image: "https://via.placeholder.com/300x300?text=Sinh+To+Bo", description: "Bơ béo ngậy, thơm ngon", popular: true },
-            { id: 17, name: "Sinh Tố Xoài", category: "sinh-to", price: 35000, image: "https://via.placeholder.com/300x300?text=Sinh+To+Xoai", description: "Xoài chín mọng, ngọt mát" },
-            { id: 18, name: "Sinh Tố Dâu", category: "sinh-to", price: 40000, image: "https://via.placeholder.com/300x300?text=Sinh+To+Dau", description: "Dâu tươi mát lạnh, ngọt tự nhiên" },
-            { id: 19, name: "Sinh Tố Sapoche", category: "sinh-to", price: 36000, image: "https://via.placeholder.com/300x300?text=Sinh+To+Sapoche", description: "Sapoche béo, ngọt đậm đà" },
-            { id: 20, name: "Sinh Tố Dưa Hấu", category: "sinh-to", price: 32000, image: "https://via.placeholder.com/300x300?text=Sinh+To+Dua+Hau", description: "Dưa hấu tươi mát, giải nhiệt" },
-
-            // Nước Ép
-            { id: 21, name: "Nước Ép Cam", category: "nuoc-ep", price: 35000, image: "https://via.placeholder.com/300x300?text=Nuoc+Ep+Cam", description: "Cam tươi nguyên chất 100%" },
-            { id: 22, name: "Nước Ép Ổi", category: "nuoc-ep", price: 32000, image: "https://via.placeholder.com/300x300?text=Nuoc+Ep+Oi", description: "Ổi tươi giàu vitamin C" },
-            { id: 23, name: "Nước Ép Dứa", category: "nuoc-ep", price: 30000, image: "https://via.placeholder.com/300x300?text=Nuoc+Ep+Dua", description: "Dứa tươi ngọt mát, giải nhiệt" },
-            { id: 24, name: "Nước Ép Cà Rốt", category: "nuoc-ep", price: 33000, image: "https://via.placeholder.com/300x300?text=Nuoc+Ep+Ca+Rot", description: "Cà rốt tươi, bổ dưỡng" },
-
-            // Soda
-            { id: 25, name: "Soda Việt Quất", category: "soda", price: 35000, image: "https://via.placeholder.com/300x300?text=Soda+Viet+Quat", description: "Soda việt quất tươi mát" },
-            { id: 26, name: "Soda Chanh", category: "soda", price: 30000, image: "https://via.placeholder.com/300x300?text=Soda+Chanh", description: "Soda chanh tươi sảng khoái", popular: true },
-            { id: 27, name: "Soda Dâu", category: "soda", price: 35000, image: "https://via.placeholder.com/300x300?text=Soda+Dau", description: "Soda dâu ngọt thanh, mát lạnh" },
-
-            // Bánh Ngọt
-            { id: 28, name: "Bánh Croissant", category: "banh-ngot", price: 28000, image: "https://via.placeholder.com/300x300?text=Croissant", description: "Bánh croissant bơ thơm giòn" },
-            { id: 29, name: "Bánh Tiramisu", category: "banh-ngot", price: 45000, image: "https://via.placeholder.com/300x300?text=Tiramisu", description: "Tiramisu Ý truyền thống", popular: true },
-            { id: 30, name: "Bánh Red Velvet", category: "banh-ngot", price: 42000, image: "https://via.placeholder.com/300x300?text=Red+Velvet", description: "Bánh red velvet mềm mịn" }
-        ];
-
-        let currentPage = 1;
-        const productsPerPage = 12;
-        let filteredProducts = [...allProducts];
-        let currentCategory = '@category';
-        let currentSort = '@sort';
-        let priceFilter = { min: 0, max: 999999 };
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            filterProducts();
-
-            // Sort change event
-            document.getElementById('sortSelect').addEventListener('change', function() {
-                currentSort = this.value;
-                sortProducts();
-                displayProducts();
-            });
-        });
-
-      
-
-        function filterByPrice(min, max) {
-            priceFilter = { min, max };
-            currentPage = 1;
-            filterProducts();
-        }
-
-        function sortProducts() {
-            switch(currentSort) {
-                case 'price-asc':
-                    filteredProducts.sort((a, b) => a.price - b.price);
-                    break;
-                case 'price-desc':
-                    filteredProducts.sort((a, b) => b.price - a.price);
-                    break;
-                case 'name-asc':
-                    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                case 'name-desc':
-                    filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
-                    break;
-                case 'popular':
-                    filteredProducts.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
-                    break;
-            }
-        }
-
-        function displayProducts() {
-            const startIndex = (currentPage - 1) * productsPerPage;
-            const endIndex = startIndex + productsPerPage;
-            const productsToShow = filteredProducts.slice(startIndex, endIndex);
-
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
-
-            if (productsToShow.length === 0) {
-                grid.innerHTML = '<div class="col-12 text-center py-5"><p class="text-muted">Không tìm thấy sản phẩm nào</p></div>';
-                document.getElementById('productCount').textContent = '0';
-                return;
-            }
-
-            productsToShow.forEach(product => {
-                const col = document.createElement('div');
-                col.className = 'col-md-6 col-lg-4';
-                col.innerHTML = `
-                    <div class="product-card">
-                        <div class="product-image">
-                            ${product.popular ? '<span class="product-badge">Phổ Biến</span>' : ''}
-                            <img src="${product.image}" alt="${product.name}">
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">${product.name}</h3>
-                            <p class="product-description">${product.description}</p>
-                            <div class="product-footer">
-                                <span class="product-price">${product.price.toLocaleString('vi-VN')}đ</span>
-                                <a href="@Url.Action("ProductDetail", "Products")?id=${product.id}" class="btn btn-add-cart">
-                                    <i class="fas fa-shopping-cart me-1"></i> Thêm
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(col);
-            });
-
-            document.getElementById('productCount').textContent = filteredProducts.length;
-            displayPagination();
-        }
-
-        function displayPagination() {
-            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-            const pagination = document.getElementById('pagination');
-            pagination.innerHTML = '';
-
-            if (totalPages <= 1) return;
-
-            // Previous button
-            const prevLi = document.createElement('li');
-            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-            prevLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">Trước</a>`;
-            pagination.appendChild(prevLi);
-
-            // Page numbers
-            for (let i = 1; i <= totalPages; i++) {
-                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-                    const li = document.createElement('li');
-                    li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                    li.innerHTML = `<a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>`;
-                    pagination.appendChild(li);
-                } else if (i === currentPage - 2 || i === currentPage + 2) {
-                    const li = document.createElement('li');
-                    li.className = 'page-item disabled';
-                    li.innerHTML = '<span class="page-link">...</span>';
-                    pagination.appendChild(li);
-                }
-            }
-
-            // Next button
-            const nextLi = document.createElement('li');
-            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-            nextLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">Sau</a>`;
-            pagination.appendChild(nextLi);
-        }
-
-        function changePage(page) {
-            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-            if (page < 1 || page > totalPages) return;
-
-            currentPage = page;
-            displayProducts();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        let keyword = '@ViewBag.Keyword';
-
-
-        function filterProducts() {
-            filteredProducts = [...allProducts];
-
-            
-            if (currentCategory && currentCategory !== '') {
-                filteredProducts = filteredProducts.filter(
-                    p => p.category === currentCategory
-                );
-            }
-
-           
-            if (keyword && keyword.trim() !== "") {
-                filteredProducts = filteredProducts.filter(p =>
-                    p.name.toLowerCase().includes(keyword.toLowerCase())
-                );
-            }
-
-          
-            filteredProducts = filteredProducts.filter(p =>
-                p.price >= priceFilter.min && p.price <= priceFilter.max
-            );
-
-            sortProducts();
-
-           
-            displayProducts();
-        }
-
-
-    </script>
+    <script src="~/Scripts/products-api.js"></script>
 }

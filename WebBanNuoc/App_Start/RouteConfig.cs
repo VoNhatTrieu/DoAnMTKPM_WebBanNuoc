@@ -13,6 +13,14 @@ namespace WebBanNuoc
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // Admin area route
+            routes.MapRoute(
+                name: "Admin",
+                url: "Admin/{action}/{id}",
+                defaults: new { controller = "Admin", action = "Index", id = UrlParameter.Optional }
+            );
+
+            // Default route
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using apii.Data;
+using apii.Models;
 using System.Linq.Expressions;
 
 namespace apii.Repositories;
@@ -25,17 +26,17 @@ public class Repository<T> : IRepository<T> where T : class
 
     public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await _dbSet.ToListAsync();
+        return await _dbSet.AsNoTracking().ToListAsync();
     }
 
     public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _dbSet.Where(predicate).ToListAsync();
+        return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
     }
 
     public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _dbSet.FirstOrDefaultAsync(predicate);
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
     }
 
     public virtual async Task AddAsync(T entity)
@@ -73,5 +74,48 @@ public class Repository<T> : IRepository<T> where T : class
     public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
     {
         return await _dbSet.AnyAsync(predicate);
+    }
+    
+    // Ownership-based methods for data segregation
+    public virtual async Task<IEnumerable<T>> GetByOwnerAsync(int? ownerId)
+    {
+        if (!typeof(IOwnable).IsAssignableFrom(typeof(T)))
+        {
+            throw new InvalidOperationException($"Type {typeof(T).Name} does not implement IOwnable");
+        }
+        
+        if (ownerId == null)
+        {
+            // Admin - return all
+            return await _dbSet.ToListAsync();
+        }
+        
+        // Regular user - return only owned entities
+        return await _dbSet.Where(e => ((IOwnable)e).OwnerId == ownerId.Value).ToListAsync();
+    }
+    
+    public virtual async Task<IEnumerable<T>> FindByOwnerAsync(int ownerId, Expression<Func<T, bool>> predicate)
+    {
+        if (!typeof(IOwnable).IsAssignableFrom(typeof(T)))
+        {
+            throw new InvalidOperationException($"Type {typeof(T).Name} does not implement IOwnable");
+        }
+        
+        return await _dbSet
+            .Where(e => ((IOwnable)e).OwnerId == ownerId)
+            .Where(predicate)
+            .ToListAsync();
+    }
+    
+    public virtual async Task<T?> GetByIdAndOwnerAsync(int id, int ownerId)
+    {
+        if (!typeof(IOwnable).IsAssignableFrom(typeof(T)))
+        {
+            throw new InvalidOperationException($"Type {typeof(T).Name} does not implement IOwnable");
+        }
+        
+        return await _dbSet
+            .Where(e => EF.Property<int>(e, "Id") == id && ((IOwnable)e).OwnerId == ownerId)
+            .FirstOrDefaultAsync();
     }
 }

@@ -1,461 +1,192 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var productId = ViewBag.ProductId;
 }
 
-
-<div class="container py-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
-            <li class="breadcrumb-item"><a href="@Url.Action("Products", "Home")">Thực đơn</a></li>
-            <li class="breadcrumb-item active">Trà Sữa Trân Châu Đen</li>
-        </ol>
-    </nav>
-
-    <div class="row g-5">
-        <!-- HÌNH ẢNH SẢN PHẨM -->
-        <div class="col-lg-5">
-            <div class="product-image-section">
-                <div class="main-image mb-3" style="background: linear-gradient(135deg, #004E64 0%, #006B84 100%); border-radius: 24px; padding: 3rem; text-align: center; position: relative; overflow: hidden;">
-                    <span class="badge bg-warning position-absolute top-0 start-0 m-3" style="font-size: 0.9rem;">Bán chạy</span>
-                    <img src="https://images.unsplash.com/photo-1578922746329-39564cf067ed?w=500&h=500&fit=crop" alt="Trà sữa trân châu đen" class="img-fluid" style="max-height: 400px; object-fit: contain; border-radius: 16px;">
-                </div>
-
-                <!-- THUMBNAIL -->
-                <div class="d-flex gap-2 justify-content-center">
-                    <div class="thumbnail active" style="width: 80px; height: 80px; border: 3px solid #FF6B35; border-radius: 12px; overflow: hidden; cursor: pointer;">
-                        <img src="https://images.unsplash.com/photo-1578922746329-39564cf067ed?w=80&h=80&fit=crop" class="w-100 h-100" style="object-fit: cover;">
-                    </div>
-                    <div class="thumbnail" style="width: 80px; height: 80px; border: 3px solid #e9ecef; border-radius: 12px; overflow: hidden; cursor: pointer;">
-                        <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=80&h=80&fit=crop" class="w-100 h-100" style="object-fit: cover;">
-                    </div>
-                    <div class="thumbnail" style="width: 80px; height: 80px; border: 3px solid #e9ecef; border-radius: 12px; overflow: hidden; cursor: pointer;">
-                        <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?w=80&h=80&fit=crop" class="w-100 h-100" style="object-fit: cover;">
-                    </div>
-                </div>
-            </div>
+<div class="container py-5" id="productDetailContainer">
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Đang tải...</span>
         </div>
-
-        <!-- THÔNG TIN SẢN PHẨM -->
-        <div class="col-lg-7">
-            <div class="product-info">
-                <h1 class="fw-bold mb-3" style="color: #2D3142; font-size: 2rem;">Trà Sữa Trân Châu Đen</h1>
-
-                <div class="d-flex align-items-center mb-3">
-                    <div class="me-3">
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                        <span class="ms-2 text-muted">(152 đánh giá)</span>
-                    </div>
-                    <span class="badge bg-success">Còn hàng</span>
-                </div>
-
-                <p class="text-muted mb-4" style="font-size: 1.05rem; line-height: 1.7;">
-                    Trà sữa trân châu đen đặc biệt với lớp kem cheese thơm ngon,
-                    trân châu dai mềm được nấu chín với đường đen thơm lừng.
-                    Một sự kết hợp hoàn hảo cho những ngày nắng nóng.
-                </p>
-
-                <!-- SIZE -->
-                <div class="mb-4">
-                    <label class="fw-bold mb-2 d-flex align-items-center">
-                        <i class="fas fa-ruler-vertical me-2 text-primary"></i>
-                        Chọn kích cỡ
-                    </label>
-                    <div class="btn-group size-selector w-100" role="group">
-                        <input type="radio" class="btn-check" name="size" id="size-s" value="S" data-price="0">
-                        <label class="btn btn-outline-primary" for="size-s" style="border-radius: 12px 0 0 12px;">
-                            <div class="d-flex flex-column">
-                                <span class="fw-bold">S</span>
-                                <small class="text-muted">+0₫</small>
-                            </div>
-                        </label>
-
-                        <input type="radio" class="btn-check" name="size" id="size-m" value="M" data-price="5000" checked>
-                        <label class="btn btn-outline-primary" for="size-m">
-                            <div class="d-flex flex-column">
-                                <span class="fw-bold">M</span>
-                                <small class="text-muted">+5.000₫</small>
-                            </div>
-                        </label>
-
-                        <input type="radio" class="btn-check" name="size" id="size-l" value="L" data-price="10000">
-                        <label class="btn btn-outline-primary" for="size-l" style="border-radius: 0 12px 12px 0;">
-                            <div class="d-flex flex-column">
-                                <span class="fw-bold">L</span>
-                                <small class="text-muted">+10.000₫</small>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- MỨC ĐƯỜNG -->
-                <div class="mb-4">
-                    <label class="fw-bold mb-2 d-flex align-items-center">
-                        <i class="fas fa-cube-sugar me-2 text-warning"></i>
-                        Mức đường
-                    </label>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <input type="radio" class="btn-check" name="sugar" id="sugar-0" value="0%" checked>
-                        <label class="btn btn-outline-secondary" for="sugar-0" style="border-radius: 50px;">0%</label>
-
-                        <input type="radio" class="btn-check" name="sugar" id="sugar-30" value="30%">
-                        <label class="btn btn-outline-secondary" for="sugar-30" style="border-radius: 50px;">30%</label>
-
-                        <input type="radio" class="btn-check" name="sugar" id="sugar-50" value="50%">
-                        <label class="btn btn-outline-secondary" for="sugar-50" style="border-radius: 50px;">50%</label>
-
-                        <input type="radio" class="btn-check" name="sugar" id="sugar-70" value="70%">
-                        <label class="btn btn-outline-secondary" for="sugar-70" style="border-radius: 50px;">70%</label>
-
-                        <input type="radio" class="btn-check" name="sugar" id="sugar-100" value="100%">
-                        <label class="btn btn-outline-secondary" for="sugar-100" style="border-radius: 50px;">100%</label>
-                    </div>
-                </div>
-
-                <!-- MỨC ĐÁ -->
-                <div class="mb-4">
-                    <label class="fw-bold mb-2 d-flex align-items-center">
-                        <i class="fas fa-snowflake me-2 text-info"></i>
-                        Mức đá
-                    </label>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <input type="radio" class="btn-check" name="ice" id="ice-0" value="Không đá">
-                        <label class="btn btn-outline-secondary" for="ice-0" style="border-radius: 50px;">Không đá</label>
-
-                        <input type="radio" class="btn-check" name="ice" id="ice-1" value="Ít đá">
-                        <label class="btn btn-outline-secondary" for="ice-1" style="border-radius: 50px;">Ít đá</label>
-
-                        <input type="radio" class="btn-check" name="ice" id="ice-2" value="Vừa" checked>
-                        <label class="btn btn-outline-secondary" for="ice-2" style="border-radius: 50px;">Vừa</label>
-
-                        <input type="radio" class="btn-check" name="ice" id="ice-3" value="Nhiều đá">
-                        <label class="btn btn-outline-secondary" for="ice-3" style="border-radius: 50px;">Nhiều đá</label>
-                    </div>
-                </div>
-
-                <!-- TOPPING -->
-                <div class="mb-4">
-                    <label class="fw-bold mb-2 d-flex align-items-center">
-                        <i class="fas fa-plus-circle me-2 text-success"></i>
-                        Chọn topping (Tùy chọn)
-                    </label>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="form-check topping-item p-3" style="background: #f8f9fa; border-radius: 12px; border: 2px solid transparent; transition: all 0.3s ease;">
-                                <input class="form-check-input" type="checkbox" id="topping-1" data-price="8000">
-                                <label class="form-check-label w-100" for="topping-1">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Trân châu đen</span>
-                                        <span class="text-muted">+8.000₫</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check topping-item p-3" style="background: #f8f9fa; border-radius: 12px; border: 2px solid transparent; transition: all 0.3s ease;">
-                                <input class="form-check-input" type="checkbox" id="topping-2" data-price="8000">
-                                <label class="form-check-label w-100" for="topping-2">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Trân châu trắng</span>
-                                        <span class="text-muted">+8.000₫</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check topping-item p-3" style="background: #f8f9fa; border-radius: 12px; border: 2px solid transparent; transition: all 0.3s ease;">
-                                <input class="form-check-input" type="checkbox" id="topping-3" data-price="10000">
-                                <label class="form-check-label w-100" for="topping-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Kem cheese</span>
-                                        <span class="text-muted">+10.000₫</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check topping-item p-3" style="background: #f8f9fa; border-radius: 12px; border: 2px solid transparent; transition: all 0.3s ease;">
-                                <input class="form-check-input" type="checkbox" id="topping-4" data-price="7000">
-                                <label class="form-check-label w-100" for="topping-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Thạch trái cây</span>
-                                        <span class="text-muted">+7.000₫</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIÁ VÀ THÊM VÀO GIỎ -->
-                <div class="row align-items-center mt-5">
-                    <div class="col-md-4">
-                        <label class="fw-bold mb-2">Số lượng</label>
-                        <div class="input-group" style="border-radius: 12px; overflow: hidden;">
-                            <button class="btn btn-outline-secondary" type="button" id="decreaseQty">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="text" class="form-control text-center" value="1" id="quantity" readonly>
-                            <button class="btn btn-outline-secondary" type="button" id="increaseQty">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-md-8 mt-3 mt-md-0">
-                        <label class="fw-bold mb-2">Tổng giá</label>
-                        <h2 class="mb-0" style="color: #FF6B35; font-weight: 700;">
-                            <span id="totalPrice">35.000</span>₫
-                        </h2>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-3 mt-4">
-                    <button class="btn btn-primary btn-lg flex-fill" id="addToCart">
-                        <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
-                    </button>
-                    <button class="btn btn-outline-danger btn-lg" style="width: 60px;">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MÔ TẢ CHI TIẾT -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <ul class="nav nav-tabs mb-4" id="productTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">
-                        <i class="fas fa-info-circle me-2"></i>Mô tả
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">
-                        <i class="fas fa-star me-2"></i>Đánh giá (152)
-                    </button>
-                </li>
-            </ul>
-
-            <div class="tab-content" id="productTabContent">
-                <div class="tab-pane fade show active" id="description" role="tabpanel">
-                    <div class="card border-0 shadow-sm" style="border-radius: 16px;">
-                        <div class="card-body p-4">
-                            <h5 class="fw-bold mb-3">Giới thiệu sản phẩm</h5>
-                            <p>Trà sữa trân châu đen là một trong những đồ uống được yêu thích nhất tại Sip & Savor. Được pha chế từ trà đen thượng hạng, sữa tươi nguyên chất và trân châu đen dai mềm.</p>
-
-                            <h6 class="fw-bold mt-4 mb-3">Thành phần:</h6>
-                            <ul>
-                                <li>Trà đen Assam cao cấp</li>
-                                <li>Sữa tươi nguyên chất 100%</li>
-                                <li>Trân châu đen được nấu với đường đen tự nhiên</li>
-                                <li>Đường mía hữu cơ</li>
-                            </ul>
-
-                            <h6 class="fw-bold mt-4 mb-3">Lưu ý:</h6>
-                            <ul>
-                                <li>Sản phẩm nên được sử dụng trong vòng 2 giờ sau khi pha chế</li>
-                                <li>Không phù hợp với người bị dị ứng lactose</li>
-                                <li>Lắc đều trước khi sử dụng để hòa tan đường</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="reviews" role="tabpanel">
-                    <div class="card border-0 shadow-sm" style="border-radius: 16px;">
-                        <div class="card-body p-4">
-                            <div class="text-center mb-4">
-                                <h2 class="fw-bold">4.9 <span class="text-muted h5">/ 5.0</span></h2>
-                                <div class="mb-2">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                </div>
-                                <p class="text-muted">Dựa trên 152 đánh giá</p>
-                            </div>
-
-                            <hr>
-
-                            <!-- Review Item -->
-                            <div class="review-item mb-4">
-                                <div class="d-flex align-items-start mb-3">
-                                    <img src="https://ui-avatars.com/api/?name=Nguyen+Van+A&background=FF6B35&color=fff" class="rounded-circle me-3" width="50" height="50">
-                                    <div class="flex-fill">
-                                        <h6 class="fw-bold mb-1">Nguyễn Văn A</h6>
-                                        <div class="d-flex align-items-center mb-2">
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <span class="text-muted ms-2 small">2 ngày trước</span>
-                                        </div>
-                                        <p class="mb-0">Trà sữa rất ngon, trân châu dai mềm vừa ý. Sẽ quay lại ủng hộ!</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <!-- Review Item -->
-                            <div class="review-item mb-4">
-                                <div class="d-flex align-items-start mb-3">
-                                    <img src="https://ui-avatars.com/api/?name=Tran+Thi+B&background=004E64&color=fff" class="rounded-circle me-3" width="50" height="50">
-                                    <div class="flex-fill">
-                                        <h6 class="fw-bold mb-1">Trần Thị B</h6>
-                                        <div class="d-flex align-items-center mb-2">
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="far fa-star text-warning"></i>
-                                            <span class="text-muted ms-2 small">5 ngày trước</span>
-                                        </div>
-                                        <p class="mb-0">Đồ uống khá ổn, nhưng lần này hơi ngọt. Lần sau sẽ gọi ít đường hơn.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <p class="mt-2 text-muted">Đang tải thông tin sản phẩm...</p>
     </div>
 </div>
 
 <style>
-    .topping-item:has(.form-check-input:checked) {
-        background-color: #FFF5F0 !important;
-        border-color: #FF6B35 !important;
-    }
-
-    .thumbnail:hover {
-        border-color: #FF6B35 !important;
-        opacity: 0.8;
-    }
-
-    .btn-check:checked + .btn-outline-primary {
-        background-color: #FF6B35;
-        border-color: #FF6B35;
-        color: white;
-    }
-
-    .btn-check:checked + .btn-outline-secondary {
-        background-color: #2D3142;
-        border-color: #2D3142;
-        color: white;
-    }
+.topping-item:has(.form-check-input:checked) {
+    background-color: #FFF5F0 !important;
+    border-color: #FF6B35 !important;
+}
 </style>
 
 @section scripts {
-    <script>
-    const basePrice = 35000;
-    let quantity = 1;
+<script>
+const PRODUCTS_API_BASE = 'http://localhost:5299/api';
+const productId = @productId;
+let currentProduct = null;
+let quantity = 1;
+const noImageSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="20"%3ENo Image%3C/text%3E%3C/svg%3E';
 
-    function calculatePrice() {
-        let total = basePrice;
-
-        // Cộng giá size
-        const sizeSelected = document.querySelector('input[name="size"]:checked');
-        if (sizeSelected) {
-            total += parseInt(sizeSelected.dataset.price);
+async function loadProductDetail() {
+    try {
+        const response = await fetch(`${PRODUCTS_API_BASE}/products/${productId}`);
+        if (!response.ok) throw new Error('Product not found');
+        const result = await response.json();
+        if (result.success && result.data) {
+            currentProduct = result.data;
+            renderProductDetail(result.data);
         }
-
-        // Cộng giá topping
-        const toppings = document.querySelectorAll('input[type="checkbox"]:checked');
-        toppings.forEach(topping => {
-            total += parseInt(topping.dataset.price);
-        });
-
-        // Nhân với số lượng
-        total *= quantity;
-
-        document.getElementById('totalPrice').textContent = total.toLocaleString('vi-VN');
+    } catch (error) {
+        $('#productDetailContainer').html('<div class="alert alert-danger">Không thể tải sản phẩm</div>');
     }
+}
 
-    // Lắng nghe thay đổi size
-    document.querySelectorAll('input[name="size"]').forEach(input => {
-        input.addEventListener('change', calculatePrice);
-    });
+function renderProductDetail(p) {
+    const img = p.imageUrl || noImageSvg;
+    $('#productDetailContainer').html(`
+<nav aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="/Home">Trang chủ</a></li>
+<li class="breadcrumb-item"><a href="/Products">Sản phẩm</a></li>
+<li class="breadcrumb-item active">${esc(p.name)}</li>
+</ol></nav>
+<div class="row g-5">
+<div class="col-lg-5">
+<div class="text-center p-4 bg-light rounded-4">
+<img id="mainImg" src="${img}" alt="${esc(p.name)}" class="img-fluid rounded" style="max-height:400px;object-fit:contain" onerror="this.src='${noImageSvg}'">
+</div>
+</div>
+<div class="col-lg-7">
+<h1 class="fw-bold mb-3">${esc(p.name)}</h1>
+<span class="badge ${p.isAvailable?'bg-success':'bg-danger'} mb-3">${p.isAvailable?'Còn hàng':'Hết hàng'}</span>
+<p class="text-muted">${esc(p.description||'Đồ uống ngon')}</p>
 
-    // Lắng nghe thay đổi topping
-    document.querySelectorAll('input[type="checkbox"]').forEach(input => {
-        input.addEventListener('change', calculatePrice);
-    });
+<div class="mb-4"><label class="fw-bold mb-2">Size</label>
+<div class="btn-group w-100">
+<input type="radio" class="btn-check" name="size" id="s-s" value="S" data-price="0">
+<label class="btn btn-outline-primary" for="s-s">S +0₫</label>
+<input type="radio" class="btn-check" name="size" id="s-m" value="M" data-price="5000" checked>
+<label class="btn btn-outline-primary" for="s-m">M +5k₫</label>
+<input type="radio" class="btn-check" name="size" id="s-l" value="L" data-price="10000">
+<label class="btn btn-outline-primary" for="s-l">L +10k₫</label>
+</div></div>
 
-    // Tăng/giảm số lượng
-    document.getElementById('increaseQty').addEventListener('click', function() {
-        quantity++;
-        document.getElementById('quantity').value = quantity;
-        calculatePrice();
-    });
+<div class="mb-4"><label class="fw-bold mb-2">Đường</label>
+<div class="btn-group w-100">
+<input type="radio" class="btn-check" name="sugar" id="sg-0" value="0%">
+<label class="btn btn-outline-warning" for="sg-0">0%</label>
+<input type="radio" class="btn-check" name="sugar" id="sg-50" value="50%">
+<label class="btn btn-outline-warning" for="sg-50">50%</label>
+<input type="radio" class="btn-check" name="sugar" id="sg-100" value="100%" checked>
+<label class="btn btn-outline-warning" for="sg-100">100%</label>
+</div></div>
 
-    document.getElementById('decreaseQty').addEventListener('click', function() {
-        if (quantity > 1) {
-            quantity--;
-            document.getElementById('quantity').value = quantity;
-            calculatePrice();
+<div class="mb-4"><label class="fw-bold mb-2">Đá</label>
+<div class="btn-group w-100">
+<input type="radio" class="btn-check" name="ice" id="i-0" value="Không">
+<label class="btn btn-outline-info" for="i-0">Không</label>
+<input type="radio" class="btn-check" name="ice" id="i-1" value="Ít">
+<label class="btn btn-outline-info" for="i-1">Ít</label>
+<input type="radio" class="btn-check" name="ice" id="i-2" value="Nhiều" checked>
+<label class="btn btn-outline-info" for="i-2">Nhiều</label>
+</div></div>
+
+<div class="mb-4" id="toppings"></div>
+
+<div class="row mb-4">
+<div class="col-6">
+<label class="fw-bold mb-2">Số lượng</label>
+<div class="input-group">
+<button class="btn btn-outline-secondary" id="dec">-</button>
+<input type="text" class="form-control text-center" id="qty" value="1" readonly>
+<button class="btn btn-outline-secondary" id="inc">+</button>
+</div>
+</div>
+<div class="col-6">
+<label class="fw-bold mb-2">Tổng</label>
+<h3 class="text-primary fw-bold" id="total">${formatCurrency(p.basePrice)}</h3>
+</div>
+</div>
+
+<button class="btn btn-primary btn-lg w-100" id="addCart" ${!p.isAvailable?'disabled':''}>
+<i class="fas fa-cart-plus me-2"></i>${p.isAvailable?'Thêm vào giỏ':'Hết hàng'}
+</button>
+</div>
+</div>
+    `);
+    loadToppings();
+    initEvents(p);
+}
+
+async function loadToppings() {
+    try {
+        const res = await fetch(`${PRODUCTS_API_BASE}/products/toppings`);
+        const r = await res.json();
+        if (r.success && r.data) {
+            let h = '<label class="fw-bold mb-2">Topping</label>';
+            r.data.filter(t => t.isAvailable).forEach(t => {
+                h += `<div class="form-check mb-2 topping-item p-2 rounded">
+<input class="form-check-input tpchk" type="checkbox" id="t${t.id}" data-price="${t.price}">
+<label class="form-check-label d-flex justify-content-between w-100" for="t${t.id}">
+<span>${esc(t.name)}</span><span class="text-primary">+${formatCurrency(t.price)}</span>
+</label></div>`;
+            });
+            $('#toppings').html(h);
+            $('.tpchk').on('change', calcPrice);
         }
-    });
+    } catch (e) {}
+}
 
-    // Thêm vào giỏ hàng
-    document.getElementById('addToCart').addEventListener('click', function() {
-        const size = document.querySelector('input[name="size"]:checked').value;
-        const sugar = document.querySelector('input[name="sugar"]:checked').value;
-        const ice = document.querySelector('input[name="ice"]:checked').value;
+function initEvents(p) {
+    $('input[name="size"],input[name="sugar"],input[name="ice"]').on('change', calcPrice);
+    $('#inc').click(() => { quantity++; $('#qty').val(quantity); calcPrice(); });
+    $('#dec').click(() => { if(quantity>1) { quantity--; $('#qty').val(quantity); calcPrice(); } });
+    $('#addCart').click(() => addCart(p));
+    calcPrice();
+}
 
-        const toppings = [];
-        document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-            toppings.push(cb.nextElementSibling.querySelector('span').textContent);
-        });
+function calcPrice() {
+    if (!currentProduct) return;
+    let t = currentProduct.basePrice;
+    t += parseInt($('input[name="size"]:checked').data('price') || 0);
+    $('.tpchk:checked').each(function() { t += parseInt($(this).data('price') || 0); });
+    t *= quantity;
+    $('#total').text(formatCurrency(t));
+}
 
-        const product = {
-            id: 1,
-            name: 'Trà Sữa Trân Châu Đen',
-            price: parseInt(document.getElementById('totalPrice').textContent.replace(/\./g, '')),
-            quantity: quantity,
-            size: size,
-            sugar: sugar,
-            ice: ice,
-            toppings: toppings,
-            image: 'https://images.unsplash.com/photo-1578922746329-39564cf067ed?w=100&h=100&fit=crop'
-        };
+function addCart(p) {
+    const item = {
+        id: p.id,
+        name: p.name,
+        image: p.imageUrl || noImageSvg,
+        price: parseInt($('#total').text().replace(/[^\d]/g, '')) / quantity,
+        quantity: quantity,
+        size: $('input[name="size"]:checked').val(),
+        sugar: $('input[name="sugar"]:checked').val(),
+        ice: $('input[name="ice"]:checked').val(),
+        toppings: $('.tpchk:checked').map(function() { return $(this).next().find('span').first().text(); }).get().join(', ')
+    };
+    
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const idx = cart.findIndex(i => i.id === item.id && i.size === item.size && i.sugar === item.sugar && i.ice === item.ice && i.toppings === item.toppings);
+    if (idx > -1) cart[idx].quantity += item.quantity;
+    else cart.push(item);
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    alert('Đã thêm vào giỏ hàng!');
+}
 
-        // Lưu vào localStorage
-        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+function formatCurrency(n) {
+    return new Intl.NumberFormat('vi-VN', {style:'currency',currency:'VND'}).format(n);
+}
 
-        // Kiểm tra xem sản phẩm đã có trong giỏ chưa
-        const existingIndex = cart.findIndex(item =>
-            item.id === product.id &&
-            item.size === product.size &&
-            item.sugar === product.sugar &&
-            item.ice === product.ice &&
-            JSON.stringify(item.toppings) === JSON.stringify(product.toppings)
-        );
+function esc(t) {
+    if (!t) return '';
+    const d = document.createElement('div');
+    d.textContent = t;
+    return d.innerHTML;
+}
 
-        if (existingIndex > -1) {
-            cart[existingIndex].quantity += product.quantity;
-        } else {
-            cart.push(product);
-        }
-
-        localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Cập nhật số lượng giỏ hàng
-        updateCartCount();
-
-        // Hiển thị thông báo
-        alert('Đã thêm sản phẩm vào giỏ hàng!');
-    });
-
-    // Khởi tạo giá ban đầu
-    calculatePrice();
-    </script>
+$(document).ready(() => loadProductDetail());
+</script>
 }

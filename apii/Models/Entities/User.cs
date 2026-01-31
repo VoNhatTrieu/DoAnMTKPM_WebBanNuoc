@@ -18,4 +18,9 @@ public class User
     // Navigation properties
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+    
+    /// <summary>
+    /// Products owned by this user - for data segregation
+    /// </summary>
+    public virtual ICollection<Product> OwnedProducts { get; set; } = new List<Product>();
 }

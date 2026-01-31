@@ -205,6 +205,20 @@
 
 
     <script>
+        // Xóa giỏ hàng khi logout
+        @if (TempData["ClearCart"] != null && (bool)TempData["ClearCart"])
+        {
+            var userKey = Context.Session["UserEmail"] as string ?? "guest";
+            <text>
+            localStorage.removeItem('cart');
+            localStorage.removeItem('voucherCode');
+            localStorage.removeItem('voucherPercent');
+            localStorage.removeItem('voucherFreeShip');
+            localStorage.removeItem('orders_' + '@userKey');
+            console.log('Cart & orders cleared after logout for user: @userKey');
+            </text>
+        }
+
         // Cập nhật số lượng giỏ hàng
         function updateCartCount() {
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');

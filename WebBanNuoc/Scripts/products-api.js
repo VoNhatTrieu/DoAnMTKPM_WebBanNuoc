@@ -53,8 +53,12 @@ function renderProducts(products) {
     
     if (!products || products.length === 0) {
         showNoProducts();
+        $('#productCount').text('0');
         return;
     }
+
+    // Update product count
+    $('#productCount').text(products.length);
 
     let html = '<div class="row g-4">';
     

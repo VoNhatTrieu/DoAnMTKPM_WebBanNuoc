@@ -229,7 +229,19 @@ namespace WebBanNuoc.Controllers
         public ActionResult Logout()
         {
             Session.Clear();
+            // Xóa cookies xác thực nếu có
+            if (Request.Cookies["auth_token"] != null)
+            {
+                var cookie = new System.Web.HttpCookie("auth_token")
+                {
+                    Expires = DateTime.Now.AddDays(-1),
+                    Value = ""
+                };
+                Response.Cookies.Add(cookie);
+            }
             TempData["SuccessMessage"] = "Bạn đã đăng xuất.";
+            // Set flag to clear localStorage on client side
+            TempData["ClearCart"] = true;
             return RedirectToAction("Index", "Home");
         }
 

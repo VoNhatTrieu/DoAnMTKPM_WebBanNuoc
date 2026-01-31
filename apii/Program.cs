@@ -17,6 +17,12 @@ namespace apii
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // Add HttpContextAccessor for user context
+            builder.Services.AddHttpContextAccessor();
+            
+            // Add User Context for Ownership Validation
+            builder.Services.AddScoped<apii.Models.IUserContext, apii.Models.UserContext>();
+
             // Add Repository Pattern
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

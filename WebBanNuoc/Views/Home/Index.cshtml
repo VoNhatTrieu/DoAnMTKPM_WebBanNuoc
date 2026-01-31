@@ -86,14 +86,14 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold mb-0">Danh mục phổ biến</h2>
-            <a href="@Url.Action("Products", "Products")" class="text-decoration-none" style="color: #FF6B35; font-weight: 600;">
+            <a href="@Url.Action("Index", "Products")" class="text-decoration-none" style="color: #FF6B35; font-weight: 600;">
                 Xem tất cả danh mục <i class="fas fa-arrow-right ms-1"></i>
             </a>
         </div>
 
         <div class="row g-4">
             <div class="col-6 col-md-3">
-                <a href="@Url.Action("Products", "Products", new { category = "tra-sua" })" class="text-decoration-none">
+                <a href="@Url.Action("Index", "Products", new { category = "tra-sua" })" class="text-decoration-none">
                     <div class="category-card text-center p-4" style="background: #FFF9F0; border-radius: 20px; transition: all 0.3s ease;">
                         <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
                             <i class="fas fa-mug-hot" style="font-size: 2rem; color: #F77F00;"></i>
@@ -105,19 +105,19 @@
             </div>
 
             <div class="col-6 col-md-3">
-                <a href="@Url.Action("Products", "Products", new { category = "tra-trai-cay" })" class="text-decoration-none">
+                <a href="@Url.Action("Index", "Products", new { category = "trai-cay" })" class="text-decoration-none">
                     <div class="category-card text-center p-4" style="background: #F0FFF4; border-radius: 20px; transition: all 0.3s ease;">
                         <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
                             <i class="fas fa-lemon" style="font-size: 2rem; color: #38A169;"></i>
                         </div>
-                        <h5 class="fw-bold mb-1" style="color: #2D3142;">Trà Trái Cây</h5>
+                        <h5 class="fw-bold mb-1" style="color: #2D3142;">Trái Cây</h5>
                         <small class="text-muted">20+ món</small>
                     </div>
                 </a>
             </div>
 
             <div class="col-6 col-md-3">
-                <a href="@Url.Action("Products", "Products", new { category = "ca-phe" })" class="text-decoration-none">
+                <a href="@Url.Action("Index", "Products", new { category = "ca-phe" })" class="text-decoration-none">
                     <div class="category-card text-center p-4" style="background: #FFF5F5; border-radius: 20px; transition: all 0.3s ease;">
                         <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
                             <i class="fas fa-coffee" style="font-size: 2rem; color: #C53030;"></i>
@@ -129,7 +129,7 @@
             </div>
 
             <div class="col-6 col-md-3">
-                <a href="@Url.Action("Products", "Products", new { category = "sinh-to" })" class="text-decoration-none">
+                <a href="@Url.Action("Index", "Products", new { category = "sinh-to" })" class="text-decoration-none">
                     <div class="category-card text-center p-4" style="background: #F0F9FF; border-radius: 20px; transition: all 0.3s ease;">
                         <div class="icon-wrapper mb-3" style="width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
                             <i class="fas fa-blender" style="font-size: 2rem; color: #3182CE;"></i>

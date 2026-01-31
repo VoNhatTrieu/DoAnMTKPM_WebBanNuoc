@@ -84,6 +84,11 @@ public class AdminProductDto
     public string CategoryName { get; set; } = string.Empty;
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
+    
+    // Ownership information for data segregation
+    public int OwnerId { get; set; }
+    public string OwnerName { get; set; } = string.Empty;
+    public string OwnerEmail { get; set; } = string.Empty;
 }
 
 public class CreateProductDto
@@ -92,7 +97,12 @@ public class CreateProductDto
     public string Description { get; set; } = string.Empty;
     public decimal BasePrice { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
-    public int CategoryId { get; set; }    public bool IsAvailable { get; set; } = true;}
+    public int CategoryId { get; set; }
+    public bool IsAvailable { get; set; } = true;
+    
+    // OwnerId will be set automatically from authenticated user context
+    // No need to accept it from client for security
+}
 
 public class UpdateProductDto
 {
@@ -102,6 +112,8 @@ public class UpdateProductDto
     public string ImageUrl { get; set; } = string.Empty;
     public int CategoryId { get; set; }
     public bool IsAvailable { get; set; } = true;
+    
+    // OwnerId cannot be changed after creation for security
 }
 
 public class PagedResult<T>

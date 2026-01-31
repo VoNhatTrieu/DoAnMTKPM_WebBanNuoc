@@ -55,6 +55,17 @@ public class AppDbContext : DbContext
                   .WithMany(c => c.Products)
                   .HasForeignKey(e => e.CategoryId)
                   .OnDelete(DeleteBehavior.Restrict);
+            
+            // Configure ownership relationship for data segregation
+            entity.HasOne(e => e.Owner)
+                  .WithMany(u => u.OwnedProducts)
+                  .HasForeignKey(e => e.OwnerId)
+                  .OnDelete(DeleteBehavior.Restrict);
+            
+            // Add index for performance on ownership queries
+            entity.HasIndex(e => e.OwnerId);
+            entity.HasIndex(e => new { e.OwnerId, e.CategoryId });
+            entity.HasIndex(e => new { e.OwnerId, e.IsAvailable });
         });
 
         // Configure Size

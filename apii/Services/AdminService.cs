@@ -1,4 +1,5 @@
 using apii.Data;
+using apii.Models;
 using apii.Models.DTOs;
 using apii.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -31,12 +32,12 @@ public interface IAdminService
     Task<User?> UpdateCustomerAsync(int customerId, UpdateCustomerDto dto);
     Task<bool> DeleteCustomerAsync(int customerId);
     
-    // Products
-    Task<List<AdminProductDto>> GetAllProductsAsync();
-    Task<AdminProductDto?> GetProductByIdAsync(int productId);
-    Task<Product> CreateProductAsync(CreateProductDto dto);
-    Task<Product?> UpdateProductAsync(int productId, UpdateProductDto dto);
-    Task<bool> DeleteProductAsync(int productId);
+    // Products with Ownership Support
+    Task<List<AdminProductDto>> GetAllProductsAsync(IUserContext userContext);
+    Task<AdminProductDto?> GetProductByIdAsync(int productId, IUserContext userContext);
+    Task<Product> CreateProductAsync(CreateProductDto dto, IUserContext userContext);
+    Task<Product?> UpdateProductAsync(int productId, UpdateProductDto dto, IUserContext userContext);
+    Task<bool> DeleteProductAsync(int productId, IUserContext userContext);
     
     // Categories
     Task<List<AdminCategoryDto>> GetAllCategoriesAsync();
@@ -247,10 +248,23 @@ public class AdminService : IAdminService
         return customers;
     }
 
-    public async Task<List<AdminProductDto>> GetAllProductsAsync()
+    public async Task<List<AdminProductDto>> GetAllProductsAsync(IUserContext userContext)
     {
-        var products = await _context.Products
+        // Get OwnerId filter based on user role
+        var ownerIdFilter = OwnershipValidator.GetFilterOwnerId(userContext);
+        
+        var query = _context.Products
             .Include(p => p.Category)
+            .Include(p => p.Owner)
+            .AsQueryable();
+        
+        // Apply ownership filter (null for admin = all products, specific ID for users)
+        if (ownerIdFilter.HasValue)
+        {
+            query = query.Where(p => p.OwnerId == ownerIdFilter.Value);
+        }
+        
+        var products = await query
             .Select(p => new AdminProductDto
             {
                 ProductId = p.Id,
@@ -261,7 +275,10 @@ public class AdminService : IAdminService
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
                 IsActive = p.IsAvailable,
-                CreatedAt = p.CreatedDate
+                CreatedAt = p.CreatedDate,
+                OwnerId = p.OwnerId,
+                OwnerName = p.Owner.FullName,
+                OwnerEmail = p.Owner.Email
             })
             .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
@@ -269,10 +286,11 @@ public class AdminService : IAdminService
         return products;
     }
 
-    public async Task<AdminProductDto?> GetProductByIdAsync(int productId)
+    public async Task<AdminProductDto?> GetProductByIdAsync(int productId, IUserContext userContext)
     {
         var product = await _context.Products
             .Include(p => p.Category)
+            .Include(p => p.Owner)
             .Where(p => p.Id == productId)
             .Select(p => new AdminProductDto
             {
@@ -284,15 +302,31 @@ public class AdminService : IAdminService
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
                 IsActive = p.IsAvailable,
-                CreatedAt = p.CreatedDate
+                CreatedAt = p.CreatedDate,
+                OwnerId = p.OwnerId,
+                OwnerName = p.Owner.FullName,
+                OwnerEmail = p.Owner.Email
             })
             .FirstOrDefaultAsync();
+
+        if (product == null)
+            return null;
+            
+        // Validate ownership access
+        OwnershipValidator.ValidateAccess(userContext, product.OwnerId, $"Product {productId}");
 
         return product;
     }
 
-    public async Task<Product> CreateProductAsync(CreateProductDto dto)
+    public async Task<Product> CreateProductAsync(CreateProductDto dto, IUserContext userContext)
     {
+        // Get current user ID - this will be the owner
+        var currentUserId = userContext.GetCurrentUserId();
+        if (!currentUserId.HasValue)
+        {
+            throw new UnauthorizedAccessException("User must be authenticated to create products");
+        }
+        
         var product = new Product
         {
             Name = dto.Name,
@@ -301,6 +335,7 @@ public class AdminService : IAdminService
             ImageUrl = dto.ImageUrl,
             CategoryId = dto.CategoryId,
             IsAvailable = dto.IsAvailable,
+            OwnerId = currentUserId.Value, // Set owner to current user
             CreatedDate = DateTime.Now
         };
 
@@ -309,11 +344,14 @@ public class AdminService : IAdminService
         return product;
     }
 
-    public async Task<Product?> UpdateProductAsync(int productId, UpdateProductDto dto)
+    public async Task<Product?> UpdateProductAsync(int productId, UpdateProductDto dto, IUserContext userContext)
     {
         var product = await _context.Products.FindAsync(productId);
         if (product == null)
             return null;
+
+        // Validate ownership - user can only update their own products (admin can update all)
+        OwnershipValidator.ValidateAccess(userContext, product.OwnerId, $"Product {productId}");
 
         product.Name = dto.Name;
         product.Description = dto.Description;
@@ -321,16 +359,20 @@ public class AdminService : IAdminService
         product.ImageUrl = dto.ImageUrl;
         product.CategoryId = dto.CategoryId;
         product.IsAvailable = dto.IsAvailable;
+        // OwnerId CANNOT be changed for security
 
         await _context.SaveChangesAsync();
         return product;
     }
 
-    public async Task<bool> DeleteProductAsync(int productId)
+    public async Task<bool> DeleteProductAsync(int productId, IUserContext userContext)
     {
         var product = await _context.Products.FindAsync(productId);
         if (product == null)
             return false;
+
+        // Validate ownership - user can only delete their own products (admin can delete all)
+        OwnershipValidator.ValidateAccess(userContext, product.OwnerId, $"Product {productId}");
 
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();

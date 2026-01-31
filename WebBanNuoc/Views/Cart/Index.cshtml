@@ -2,31 +2,53 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var isLoggedIn = Session["UserId"] != null;
+}
 <div class="container py-5">
+
     <div class="row">
         <div class="col-12">
             <h2 class="fw-bold mb-4">
                 <i class="fas fa-shopping-cart me-2" style="color: #FF6B35;"></i>
                 Giỏ hàng của bạn
             </h2>
+            @if (!isLoggedIn)
+            {
+                <div class="alert alert-warning">Bạn chưa đăng nhập. Vui lòng <a href="@Url.Action("Login", "Account")">đăng nhập</a> để sử dụng giỏ hàng.</div>
+            }
         </div>
     </div>
 
     <div class="row g-4">
+
         <!-- DANH SÁCH SẢN PHẨM -->
         <div class="col-lg-8">
             <div id="cartItems">
-                <!-- Giỏ hàng trống -->
-                <div id="emptyCart" class="text-center py-5" style="display: none;">
-                    <i class="fas fa-shopping-cart" style="font-size: 5rem; color: #e9ecef;"></i>
-                    <h4 class="mt-4 text-muted">Giỏ hàng trống</h4>
-                    <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
-                    <a href="@Url.Action("Products", "Home")" class="btn btn-primary mt-3">
-                        <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
-                    </a>
-                </div>
-
-                <!-- Danh sách sản phẩm sẽ được render bằng JavaScript -->
+                @if (!isLoggedIn)
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-cart" style="font-size: 5rem; color: #e9ecef;"></i>
+                        <h4 class="mt-4 text-muted">Giỏ hàng trống</h4>
+                        <p class="text-muted">Vui lòng đăng nhập để sử dụng giỏ hàng.</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary mt-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <!-- Giỏ hàng trống -->
+                    <div id="emptyCart" class="text-center py-5" style="display: none;">
+                        <i class="fas fa-shopping-cart" style="font-size: 5rem; color: #e9ecef;"></i>
+                        <h4 class="mt-4 text-muted">Giỏ hàng trống</h4>
+                        <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
+                        <a href="@Url.Action("Products", "Home")" class="btn btn-primary mt-3">
+                            <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                        </a>
+                    </div>
+                    <!-- Danh sách sản phẩm sẽ được render bằng JavaScript -->
+                }
             </div>
         </div>
 
@@ -69,7 +91,7 @@
                         <span class="h4 fw-bold" style="color: #FF6B35;" id="total">0₫</span>
                     </div>
 
-                    <a href="@Url.Action("Checkout", "Home")" class="btn btn-primary btn-lg w-100 mb-3" id="checkoutBtn">
+                    <a href="@Url.Action("Checkout", "Cart")" class="btn btn-primary btn-lg w-100 mb-3" id="checkoutBtn">
                         <i class="fas fa-credit-card me-2"></i>Thanh toán
                     </a>
 
@@ -168,7 +190,37 @@
     let discountPercent = 0;
 
     function loadCart() {
-        cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        try {
+            let raw = localStorage.getItem('cart');
+            if (!raw) { cart = []; }
+            else {
+                let parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) throw 'Cart is not array';
+                // Kiểm tra từng item có trường price, image, quantity
+                parsed = parsed.filter(i => i && typeof i === 'object' && i.id && i.name);
+                cart = parsed.map(i => ({
+                    id: i.id,
+                    name: i.name,
+                    image: i.image || '',
+                    price: i.price || 0,
+                    quantity: i.quantity || 1,
+                    size: i.size || '',
+                    sugar: i.sugar || '',
+                    ice: i.ice || '',
+                    toppings: i.toppings || ''
+                }));
+            }
+        } catch (e) {
+            cart = [];
+            localStorage.removeItem('cart');
+        }
+        renderCart();
+        calculateTotal();
+    }
+
+    function clearCart() {
+        cart = [];
+        localStorage.removeItem('cart');
         renderCart();
         calculateTotal();
     }
@@ -331,6 +383,11 @@
         }
     });
 
+    // Nếu chưa đăng nhập, luôn clear cart ở localStorage
+    var isLoggedIn = '@(Session["UserId"] != null ? "true" : "false")' === 'true';
+    if (!isLoggedIn) {
+        localStorage.removeItem('cart');
+    }
     // Load cart on page load
     loadCart();
     </script>
